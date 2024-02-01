@@ -1,0 +1,22 @@
+Customization
+(DONE) change wallpaper
+(DONE) reload wallpaper
+(DONE) show seconds taskbar
+
+Custom Programs
+add to startup programs
+add to start menu programs
+force run non admin
+
+Quality of Life
+stop and reload programs for lockdown browser
+always on top (or use compiled .ahk script) https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getactivewindow & https://stackoverflow.com/a/34414846
+disable sleep on lid close
+
+(not my programs)
+Process Explorer
+Universal Extractor
+microsoft store installer
+
+(MAYBE, TAKES UP SO MUCH SPACE, PROBABLY NOT) 
+copy system32 and remap script open programs

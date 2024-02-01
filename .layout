@@ -1,0 +1,21 @@
+Z 0750 0450
+
+S 00 00 09 02 "Customization"
+B 00 00 "Change Wallpaper" "ChWall.exe"
+B 02 00 "Reload Wallpaper" "RlWall.exe"
+T 04 00 "Show Seconds" "ShowSec.exe"
+
+S 00 03 09 02 "Programs"
+# HKCU\Environment\UserInitMprLogonScript
+B 00 00 "Add Startup Program" "AutoStart.exe" 
+B 02 00 "Add Program to App List" "AddProgList.exe"
+B 04 00 "Universal Extractor" "UniExtract.exe"
+
+S 00 06 09 02 "Hotkeys"
+T 00 00 "Window Pinning" "WinPinHK.exe"
+T 02 00 "Process Explorer" "ProcExpHK.exe"
+T 04 00 "Quick Close" "QCloseHK.exe"
+
+S 09 00 06 02 "About"
+S 09 03 06 02 "Edit Layout"
+S 09 06 06 02 "Source Code"
