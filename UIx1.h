@@ -6,31 +6,59 @@
 
 namespace UIx1
 {
+	using vec2 = sf::Vector2f;
+
+	struct Style
+	{
+		Style(int pScale, int pRad, int pSpace)
+		{
+			scale = pScale;
+			rad = pRad;
+			space = pSpace;
+		}
+
+		int scale, rad, space;
+	};
+
 	class RoundedRect : public sf::Drawable
 	{
 	public:
 		RoundedRect() {}
-		RoundedRect(int pX, int pY, int pW, int pH, float pRadius)
+		RoundedRect(vec2 pPos, vec2 pSize, Style* pStylePtr)
 		{
-			x = pX;
-			y = pY;
-			w = pW;
-			h = pH;
-			rad = pRadius;
+			pos = pPos;
+			size = pSize;
+			st = pStylePtr;
 
-			wRect.setSize(sf::Vector2f(w, h - rad * 2));
-			wRect.setPosition(x, y + rad);
-			hRect.setSize(sf::Vector2f(w - rad * 2, h));
-			hRect.setPosition(x + rad, y);
+			wRect.setSize(
+				vec2(size.x * st->scale - 2 * st->space, 
+				size.y * st->scale - 2 * st->rad - 2 * st->space));
+			wRect.setPosition(pos.x * st->scale + st->space, 
+				pos.y * st->scale + st->rad + st->space);
 
-			tlCirc.setRadius(rad);
-			tlCirc.setPosition(x, y);
-			trCirc.setRadius(rad);
-			trCirc.setPosition(x + w - rad * 2, y);
-			brCirc.setRadius(rad);
-			brCirc.setPosition(x + w - rad * 2, y + h - rad * 2);
-			blCirc.setRadius(rad);
-			blCirc.setPosition(x, y + h - rad * 2);
+			hRect.setSize(
+				vec2(size.x * st->scale - 2 * st->rad - 2 * st->space,
+				size.y * st->scale - 2 * st->space));
+			hRect.setPosition(pos.x * st->scale + st->rad + st->space, 
+				pos.y * st->scale + st->space);
+
+			tlCirc.setRadius(st->rad - st->space);
+			tlCirc.setPosition(pos.x * st->scale + st->space, 
+				pos.y * st->scale + st->space);
+
+			trCirc.setRadius(st->rad - st->space);
+			trCirc.setPosition(
+				(pos.x + size.x) * st->scale - 2 * st->rad + st->space, 
+				pos.y * st->scale + st->space);
+
+			brCirc.setRadius(st->rad - st->space);
+			brCirc.setPosition(
+				(pos.x + size.x) * st->scale - 2 * st->rad + st->space, 
+				(pos.y + size.y) * st->scale - 2 * st->rad + st->space);
+
+			blCirc.setRadius(st->rad - st->space);
+			blCirc.setPosition(pos.x * st->scale + st->space,
+				(pos.y + size.y) * st->scale - 2 * st->rad + st->space);
 		}
 
 		void setColor(sf::Color color)
@@ -44,10 +72,10 @@ namespace UIx1
 		}
 
 	private:
-		virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const
+		void draw(sf::RenderTarget& target, sf::RenderStates states) const
 		{
-			target.draw(wRect, states);
-			target.draw(hRect, states);
+			target.draw(wRect,  states);
+			target.draw(hRect,  states);
 			target.draw(tlCirc, states);
 			target.draw(trCirc, states);
 			target.draw(brCirc, states);
@@ -57,30 +85,29 @@ namespace UIx1
 		sf::RectangleShape wRect, hRect;
 		sf::CircleShape tlCirc, trCirc, brCirc, blCirc;
 
-		int x, y, w, h;
-		float rad;
+		Style* st;
+		vec2 pos, size;
 	};
 
 	class Input : public sf::Drawable 
 	{
 	public:
 		Input() {}
-		Input(int pX, int pY, int pW, int pH, int pRadius)
-		{
-			rect = RoundedRect(pX, pY, pW, pH, pRadius);
-		}
 
 	protected:
 		RoundedRect rect;
+		sf::Text text;
 	};
 
 	class Button : public Input
 	{
 	public:
 		Button() {}
-		Button(int pX, int pY, int pW, int pH, std::string pLabel, std::string pExec, sf::Font* pFontPtr)
+		Button(int pX, int pY, int pW, int pH, float pRadius, 
+			std::string pLabel, std::string pExec, sf::Font* pFontPtr)
 		{
-			
+			//rect = RoundedRect(pX, pY, pW, pH, pRadius);
+			//labelRect = RoundedRect(pX, pY, pW, pH, pRadius);
 		}
 
 	private:
@@ -88,6 +115,8 @@ namespace UIx1
 		{
 			target.draw(rect, states);
 		}
+
+		RoundedRect labelRect;
 	};
 
 	class Toggle : public Input
@@ -106,22 +135,27 @@ namespace UIx1
 	{
 	public:
 		Section() {}
-		Section(int pX, int pY, int pW, int pH, std::string pLabel, sf::Font* pFontPtr)
+		Section(vec2 pPos, vec2 pSize, Style* pStylePtr, std::string pLabelStr,
+			sf::Font* pFontPtr)
 		{
-			x = pX;
-			y = pY;
-			w = pW;
-			h = pH + 1;
-			label = pLabel;
+			pos = pPos;
+			size = vec2(pSize.x, pSize.y + 1);
+			st = pStylePtr;
 
-			labelRect = RoundedRect(scale * x + space, scale * y + space, scale * w - space * 2, scale - space * 2, round - space);
+			labelStr = pLabelStr;
+			fontPtr = pFontPtr;
+
+			label.setFont(*fontPtr);
+			label.setString(labelStr);
+			label.setPosition(pos.x * st->scale + 
+				(size.x * st->scale - label.getLocalBounds().width) / 2.f, 
+				pos.y * st->scale + st->space);
+
+			labelRect = RoundedRect(pos, vec2(size.x, 1), st);
+			bodyRect = RoundedRect(pos, size, st);
+
 			labelRect.setColor(labelColor);
-			bodyRect = RoundedRect(scale * x + space, scale * y + space, scale * w - space * 2, scale * h - space * 2, round - space);
 			bodyRect.setColor(bodyColor);
-
-			text.setFont(*pFontPtr);
-			text.setString(label);
-			text.setPosition(x * scale + space + ((scale * w - space * 2) - text.getLocalBounds().width) / 2.f, y * scale + space);
 		}
 
 	private:
@@ -129,24 +163,29 @@ namespace UIx1
 		{
 			target.draw(bodyRect, states);
 			target.draw(labelRect, states);
-			target.draw(text, states);
+			target.draw(label, states);
 		}
 
-		std::vector<Input*> inputs;
-		RoundedRect labelRect, bodyRect;
-		std::string label;
-		sf::Text text;
 		sf::Color labelColor = sf::Color(0x2F373FFF);
 		sf::Color bodyColor = sf::Color(0x1F272FFF);
-		int x, y, w, h;
-		int scale = 50, round = 15, space = 2;
+
+		std::vector<Input*> inputs;
+
+		vec2 pos, size;
+		RoundedRect labelRect, bodyRect;
+		Style* st;
+
+		std::string labelStr;
+		sf::Font* fontPtr;
+		sf::Text label;
 	};
 
 	class UI : public sf::Drawable
 	{
 	public:
 		UI() {}
-		UI(std::string pFilename, std::string pFontName, sf::Vector2u* winSize = nullptr)
+		UI(std::string pFilename, std::string pFontName, 
+			sf::Vector2u* winSize = nullptr)
 		{
 			font.loadFromFile(pFontName);
 			loadFile(pFilename, winSize);
@@ -169,10 +208,13 @@ namespace UIx1
 						w = 10 * (line.at(5) - '0') + (line.at(6) - '0');
 						h = 10 * (line.at(7) - '0') + (line.at(8) - '0');
 
-						if (line.size() - 10 > 10 * (line.at(9) - '0') + (line.at(10) - '0'))
-							str = line.substr(11, 10 * (line.at(9) - '0') + (line.at(10) - '0'));
+						if (line.size() - 10 > 
+							10 * (line.at(9) - '0') + (line.at(10) - '0'))
+							str = line.substr(11, 
+								10 * (line.at(9) - '0') + (line.at(10) - '0'));
 
-						sections.push_back(Section(x, y, w, h, str, &font));
+						sections.push_back(Section(vec2(x, y), 
+							vec2(w, h), &style, str, &font));
 					}
 					break;
 					
@@ -188,8 +230,16 @@ namespace UIx1
 				case 'z':
 					if (winSize != nullptr && line.size() > 8)
 					{
-						winSize->x = 1000 * (line.at(1) - '0') + 100 * (line.at(2) - '0') + 10 * (line.at(3) - '0') + (line.at(4) - '0');
-						winSize->y = 1000 * (line.at(5) - '0') + 100 * (line.at(6) - '0') + 10 * (line.at(7) - '0') + (line.at(8) - '0');
+						winSize->x = 
+							1000 * (line.at(1) - '0') + 
+							100 * (line.at(2) - '0') + 
+							10 * (line.at(3) - '0') + 
+							1 * (line.at(4) - '0');
+						winSize->y = 
+							1000 * (line.at(5) - '0') + 
+							100 * (line.at(6) - '0') + 
+							10 * (line.at(7) - '0') + 
+							1 * (line.at(8) - '0');
 					}
 					break;
 				}
@@ -222,8 +272,8 @@ namespace UIx1
 							}
 							else
 							{
-								clean.at(clean.size() - 1 - strLen) += strLen % 10;
-								clean.at(clean.size() - 2 - strLen) += strLen / 10;
+								clean[clean.size() -1 - strLen] += strLen % 10;
+								clean[clean.size() -2 - strLen] += strLen / 10;
 							}
 						}
 						else if (c != '\t' && (c != ' ' || inQuote))
@@ -252,6 +302,7 @@ namespace UIx1
 
 		std::vector<Section> sections;
 		sf::Font font;
+		Style style = Style(50, 20, 4);
 	};
 
 }
