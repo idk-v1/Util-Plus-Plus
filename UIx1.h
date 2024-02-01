@@ -24,41 +24,42 @@ namespace UIx1
 	{
 	public:
 		RoundedRect() {}
-		RoundedRect(vec2 pPos, vec2 pSize, Style* pStylePtr)
+		RoundedRect(vec2 pPos, vec2 pSize, Style* pStylePtr, int pSpaceLvl = 1)
 		{
 			pos = pPos;
 			size = pSize;
 			st = pStylePtr;
+			spaceLvl = pSpaceLvl;
 
 			wRect.setSize(
-				vec2(size.x * st->scale - 2 * st->space, 
-				size.y * st->scale - 2 * st->rad - 2 * st->space));
-			wRect.setPosition(pos.x * st->scale + st->space, 
-				pos.y * st->scale + st->rad + st->space);
+				vec2(size.x * st->scale - 2 * st->space * spaceLvl,
+				size.y * st->scale - 2 * st->rad - 2 * st->space * spaceLvl));
+			wRect.setPosition(pos.x * st->scale + st->space * spaceLvl,
+				pos.y * st->scale + st->rad + st->space * spaceLvl);
 
 			hRect.setSize(
-				vec2(size.x * st->scale - 2 * st->rad - 2 * st->space,
-				size.y * st->scale - 2 * st->space));
-			hRect.setPosition(pos.x * st->scale + st->rad + st->space, 
-				pos.y * st->scale + st->space);
+				vec2(size.x * st->scale - 2 * st->rad - 2 * st->space * spaceLvl,
+				size.y * st->scale - 2 * st->space * spaceLvl));
+			hRect.setPosition(pos.x * st->scale + st->rad + st->space * spaceLvl,
+				pos.y * st->scale + st->space * spaceLvl);
 
-			tlCirc.setRadius(st->rad - st->space);
-			tlCirc.setPosition(pos.x * st->scale + st->space, 
-				pos.y * st->scale + st->space);
+			tlCirc.setRadius(st->rad - st->space * spaceLvl);
+			tlCirc.setPosition(pos.x * st->scale + st->space * spaceLvl,
+				pos.y * st->scale + st->space * spaceLvl);
 
-			trCirc.setRadius(st->rad - st->space);
+			trCirc.setRadius(st->rad - st->space * spaceLvl);
 			trCirc.setPosition(
-				(pos.x + size.x) * st->scale - 2 * st->rad + st->space, 
-				pos.y * st->scale + st->space);
+				(pos.x + size.x) * st->scale - 2 * st->rad + st->space * spaceLvl,
+				pos.y * st->scale + st->space * spaceLvl);
 
-			brCirc.setRadius(st->rad - st->space);
+			brCirc.setRadius(st->rad - st->space * spaceLvl);
 			brCirc.setPosition(
-				(pos.x + size.x) * st->scale - 2 * st->rad + st->space, 
-				(pos.y + size.y) * st->scale - 2 * st->rad + st->space);
+				(pos.x + size.x) * st->scale - 2 * st->rad + st->space * spaceLvl,
+				(pos.y + size.y) * st->scale - 2 * st->rad + st->space * spaceLvl);
 
-			blCirc.setRadius(st->rad - st->space);
-			blCirc.setPosition(pos.x * st->scale + st->space,
-				(pos.y + size.y) * st->scale - 2 * st->rad + st->space);
+			blCirc.setRadius(st->rad - st->space * spaceLvl);
+			blCirc.setPosition(pos.x * st->scale + st->space * spaceLvl,
+				(pos.y + size.y) * st->scale - 2 * st->rad + st->space * spaceLvl);
 		}
 
 		void setColor(sf::Color color)
@@ -87,27 +88,38 @@ namespace UIx1
 
 		Style* st;
 		vec2 pos, size;
+		int spaceLvl = 1;
 	};
 
 	class Input : public sf::Drawable 
 	{
 	public:
 		Input() {}
+		Input(vec2 pPos, vec2 pSize, Style* pStylePtr)
+		{
+			pos = pPos;
+			size = pSize;
+			st = pStylePtr;
+
+			rect = RoundedRect(pos, size, st);
+		}
 
 	protected:
+		Style* st;
+		vec2 pos, size;
 		RoundedRect rect;
-		sf::Text text;
+
+	private:
+		virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const {}
 	};
 
 	class Button : public Input
 	{
 	public:
 		Button() {}
-		Button(int pX, int pY, int pW, int pH, float pRadius, 
-			std::string pLabel, std::string pExec, sf::Font* pFontPtr)
+		Button(vec2 pPos, vec2 pSize, Style* pStylePtr, std::string pLabelStr, sf::Font* pFontPtr) : Input(pPos, pSize, pStylePtr)
 		{
-			//rect = RoundedRect(pX, pY, pW, pH, pRadius);
-			//labelRect = RoundedRect(pX, pY, pW, pH, pRadius);
+
 		}
 
 	private:
@@ -123,11 +135,15 @@ namespace UIx1
 	{
 	public:
 		Toggle() {}
+		Toggle(vec2 pPos, vec2 pSize, Style* pStylePtr, std::string pLabelStr, sf::Font* pFontPtr) : Input(pPos, pSize, pStylePtr)
+		{
+
+		}
 
 	private:
 		void draw(sf::RenderTarget& target, sf::RenderStates states) const
 		{
-
+			target.draw(rect, states);
 		}
 	};
 
@@ -158,12 +174,39 @@ namespace UIx1
 			bodyRect.setColor(bodyColor);
 		}
 
+		void addButton(vec2 pPos, vec2 pSize, Style* pStylePtr, 
+			std::string str, sf::Font* pFontPtr)
+		{
+			inputs.push_back(new Button(vec2(pPos.x + pos.x, pPos.y + pos.y + 1), pSize, pStylePtr, str, pFontPtr));
+		}
+
+		void addToggle(vec2 pPos, vec2 pSize, Style* pStylePtr,
+			std::string str, sf::Font* pFontPtr)
+		{
+			inputs.push_back(new Toggle(vec2(pPos.x + pos.x, pPos.y + pos.y + 1), pSize, pStylePtr, str, pFontPtr));
+		}
+
+		Input* getInput(int pIndex)
+		{
+			if (pIndex >= 0 && pIndex < inputs.size())
+				return inputs[pIndex];
+			return nullptr;
+		}
+
+		int numInputs()
+		{
+			return inputs.size();
+		}
+
 	private:
 		void draw(sf::RenderTarget& target, sf::RenderStates states) const
 		{
 			target.draw(bodyRect, states);
 			target.draw(labelRect, states);
 			target.draw(label, states);
+
+			for (auto& input : inputs)
+				target.draw(*input, states);
 		}
 
 		sf::Color labelColor = sf::Color(0x2F373FFF);
@@ -191,39 +234,107 @@ namespace UIx1
 			loadFile(pFilename, winSize);
 		}
 
+		void addSection(vec2 pPos, vec2 pSize, Style* pStylePtr, 
+			std::string pString, sf::Font* pFontPtr)
+		{
+			sections.push_back(Section(pPos, pSize, 
+				pStylePtr, pString, pFontPtr));
+		}
+
+		Section* getSectionPtr(int pIndex)
+		{
+			if (pIndex >= 0 && pIndex < sections.size())
+				return &sections[pIndex];
+			return nullptr;
+		}
+
+		int numSection()
+		{
+			return sections.size();
+		}
+
 		void parseLines(std::vector<std::string>& lines, sf::Vector2u* winSize)
 		{
 			int x, y, w, h;
-			std::string str;
+			int strLen, strPos;
+			std::string str, str2;
 			for (auto& line : lines)
 			{
 				switch (line.at(0))
 				{
 				case 'S':
 				case 's':
-					if (lines.size() > 10)
+					if (lines.size() >= 10)
 					{
 						x = 10 * (line.at(1) - '0') + (line.at(2) - '0');
 						y = 10 * (line.at(3) - '0') + (line.at(4) - '0');
 						w = 10 * (line.at(5) - '0') + (line.at(6) - '0');
 						h = 10 * (line.at(7) - '0') + (line.at(8) - '0');
 
-						if (line.size() - 10 > 
-							10 * (line.at(9) - '0') + (line.at(10) - '0'))
-							str = line.substr(11, 
-								10 * (line.at(9) - '0') + (line.at(10) - '0'));
+						strPos = 11;
+						strLen = 10 * (line.at(9) - '0') + (line.at(10) - '0');
+						if (line.size() - 10 >= strLen)
+							str = line.substr(strPos, strLen);
 
-						sections.push_back(Section(vec2(x, y), 
-							vec2(w, h), &style, str, &font));
+						addSection(vec2(x, y), vec2(w, h), 
+							&style, str, &font);
 					}
 					break;
 					
 				case 'B':
 				case 'b':
+					if (lines.size() >= 10)
+					{
+						x = 10 * (line.at(1) - '0') + (line.at(2) - '0');
+						y = 10 * (line.at(3) - '0') + (line.at(4) - '0');
+						w = 10 * (line.at(5) - '0') + (line.at(6) - '0');
+						h = 10 * (line.at(7) - '0') + (line.at(8) - '0');
+
+						strPos = 11;
+						strLen = 10 * (line.at(9) - '0') + (line.at(10) - '0');
+						if (line.size() - strPos + 1 + 2 >= strLen)
+						{
+							str = line.substr(strPos, strLen);
+
+							strPos += strLen + 2;
+							strLen = 10 * (line.at(strPos - 2) - '0') + (line.at(strPos - 1) - '0');
+
+							if (line.size() - strPos + 1 >= strLen)
+							{
+								str2 = line.substr(strPos, strLen);
+
+								sections.back().addButton(vec2(x, y), vec2(w, h), &style, str, &font);
+							}
+						}
+					}
 					break;
 
 				case 'T':
 				case 't':
+					if (lines.size() >= 10)
+					{
+						x = 10 * (line.at(1) - '0') + (line.at(2) - '0');
+						y = 10 * (line.at(3) - '0') + (line.at(4) - '0');
+						w = 10 * (line.at(5) - '0') + (line.at(6) - '0');
+						h = 10 * (line.at(7) - '0') + (line.at(8) - '0');
+
+						strPos = 11;
+						strLen = 10 * (line.at(9) - '0') + (line.at(10) - '0');
+						if (line.size() - strPos + 1 + 2 >= strLen)
+						{
+							str = line.substr(strPos, strLen);
+
+							strPos += strLen + 2;
+							strLen = 10 * (line.at(strPos - 2) - '0') + (line.at(strPos - 1) - '0');
+
+							if (line.size() - strPos + 1 >= strLen)
+							{
+								str2 = line.substr(strPos, strLen);
+
+								sections.back().addToggle(vec2(x, y), vec2(w, h), &style, str, &font);
+							}
+						}
+					}
 					break;
 
 				case 'Z':
