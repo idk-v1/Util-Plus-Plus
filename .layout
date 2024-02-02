@@ -1,4 +1,4 @@
-Z 0750 0450
+? 0750 0450
 
 S 00 00 09 02 "Customization"
 	B 00 00 03 02 "Change Wallpaper" "ChWall.exe"
@@ -17,6 +17,7 @@ S 00 06 09 02 "Hotkeys"
 	T 06 00 03 02 "Quick Close" "QCloseHK.exe"
 
 S 09 00 06 02 "About"
+	X 00 00 06 02 "Test"
 
 S 09 03 06 02 "Edit Layout"
 	B 00 00 03 02 "Edit" "EditUI.exe"

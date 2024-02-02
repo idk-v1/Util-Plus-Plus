@@ -147,6 +147,22 @@ namespace UIx1
 		}
 	};
 
+	class Textbox : public Input
+	{
+	public:
+		Textbox() {}
+		Textbox(vec2 pPos, vec2 pSize, Style* pStylePtr, std::string pLabelStr, sf::Font* pFontPtr) : Input(pPos, pSize, pStylePtr)
+		{
+
+		}
+
+	private:
+		void draw(sf::RenderTarget& target, sf::RenderStates states) const
+		{
+			target.draw(rect, states);
+		}
+	};
+
 	class Section : public sf::Drawable
 	{
 	public:
@@ -184,6 +200,12 @@ namespace UIx1
 			std::string str, sf::Font* pFontPtr)
 		{
 			inputs.push_back(new Toggle(vec2(pPos.x + pos.x, pPos.y + pos.y + 1), pSize, pStylePtr, str, pFontPtr));
+		}
+
+		void addTextbox(vec2 pPos, vec2 pSize, Style* pStylePtr,
+			std::string str, sf::Font* pFontPtr)
+		{
+			inputs.push_back(new Textbox(vec2(pPos.x + pos.x, pPos.y + pos.y + 1), pSize, pStylePtr, str, pFontPtr));
 		}
 
 		Input* getInput(int pIndex)
@@ -337,8 +359,27 @@ namespace UIx1
 					}
 					break;
 
-				case 'Z':
-				case 'z':
+				case 'X':
+				case 'x':
+					if (lines.size() >= 10)
+					{
+						x = 10 * (line.at(1) - '0') + (line.at(2) - '0');
+						y = 10 * (line.at(3) - '0') + (line.at(4) - '0');
+						w = 10 * (line.at(5) - '0') + (line.at(6) - '0');
+						h = 10 * (line.at(7) - '0') + (line.at(8) - '0');
+
+						strPos = 11;
+						strLen = 10 * (line.at(9) - '0') + (line.at(10) - '0');
+						if (line.size() - strPos + 1 + 2 >= strLen)
+						{
+							str = line.substr(strPos, strLen);
+
+							sections.back().addTextbox(vec2(x, y), vec2(w, h), &style, str, &font);
+						}
+					}
+					break;
+
+				case '?':
 					if (winSize != nullptr && line.size() > 8)
 					{
 						winSize->x = 
