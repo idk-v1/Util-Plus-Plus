@@ -110,14 +110,16 @@ namespace UIx1
 		RoundedRect rect;
 
 	private:
-		virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const {}
+		virtual void draw(sf::RenderTarget& target, 
+			sf::RenderStates states) const {}
 	};
 
 	class Button : public Input
 	{
 	public:
 		Button() {}
-		Button(vec2 pPos, vec2 pSize, Style* pStylePtr, std::string pLabelStr, sf::Font* pFontPtr) : Input(pPos, pSize, pStylePtr)
+		Button(vec2 pPos, vec2 pSize, Style* pStylePtr, std::string pLabelStr, 
+			sf::Font* pFontPtr) : Input(pPos, pSize, pStylePtr)
 		{
 
 		}
@@ -135,7 +137,8 @@ namespace UIx1
 	{
 	public:
 		Toggle() {}
-		Toggle(vec2 pPos, vec2 pSize, Style* pStylePtr, std::string pLabelStr, sf::Font* pFontPtr) : Input(pPos, pSize, pStylePtr)
+		Toggle(vec2 pPos, vec2 pSize, Style* pStylePtr, std::string pLabelStr, 
+			sf::Font* pFontPtr) : Input(pPos, pSize, pStylePtr)
 		{
 
 		}
@@ -151,7 +154,8 @@ namespace UIx1
 	{
 	public:
 		Textbox() {}
-		Textbox(vec2 pPos, vec2 pSize, Style* pStylePtr, std::string pLabelStr, sf::Font* pFontPtr) : Input(pPos, pSize, pStylePtr)
+		Textbox(vec2 pPos, vec2 pSize, Style* pStylePtr, std::string pLabelStr, 
+			sf::Font* pFontPtr) : Input(pPos, pSize, pStylePtr)
 		{
 
 		}
@@ -193,19 +197,22 @@ namespace UIx1
 		void addButton(vec2 pPos, vec2 pSize, Style* pStylePtr, 
 			std::string str, sf::Font* pFontPtr)
 		{
-			inputs.push_back(new Button(vec2(pPos.x + pos.x, pPos.y + pos.y + 1), pSize, pStylePtr, str, pFontPtr));
+			inputs.push_back(new Button(vec2(pPos.x + pos.x, pPos.y + pos.y + 1), 
+				pSize, pStylePtr, str, pFontPtr));
 		}
 
 		void addToggle(vec2 pPos, vec2 pSize, Style* pStylePtr,
 			std::string str, sf::Font* pFontPtr)
 		{
-			inputs.push_back(new Toggle(vec2(pPos.x + pos.x, pPos.y + pos.y + 1), pSize, pStylePtr, str, pFontPtr));
+			inputs.push_back(new Toggle(vec2(pPos.x + pos.x, pPos.y + pos.y + 1), 
+				pSize, pStylePtr, str, pFontPtr));
 		}
 
 		void addTextbox(vec2 pPos, vec2 pSize, Style* pStylePtr,
 			std::string str, sf::Font* pFontPtr)
 		{
-			inputs.push_back(new Textbox(vec2(pPos.x + pos.x, pPos.y + pos.y + 1), pSize, pStylePtr, str, pFontPtr));
+			inputs.push_back(new Textbox(vec2(pPos.x + pos.x, pPos.y + pos.y + 1),
+				pSize, pStylePtr, str, pFontPtr));
 		}
 
 		Input* getInput(int pIndex)
@@ -319,13 +326,15 @@ namespace UIx1
 							str = line.substr(strPos, strLen);
 
 							strPos += strLen + 2;
-							strLen = 10 * (line.at(strPos - 2) - '0') + (line.at(strPos - 1) - '0');
+							strLen = 10 * (line.at(strPos - 2) - '0') + 
+								(line.at(strPos - 1) - '0');
 
 							if (line.size() - strPos + 1 >= strLen)
 							{
 								str2 = line.substr(strPos, strLen);
 
-								sections.back().addButton(vec2(x, y), vec2(w, h), &style, str, &font);
+								sections.back().addButton(vec2(x, y),
+									vec2(w, h), &style, str, &font);
 							}
 						}
 					}
@@ -347,13 +356,15 @@ namespace UIx1
 							str = line.substr(strPos, strLen);
 
 							strPos += strLen + 2;
-							strLen = 10 * (line.at(strPos - 2) - '0') + (line.at(strPos - 1) - '0');
+							strLen = 10 * (line.at(strPos - 2) - '0') + 
+								(line.at(strPos - 1) - '0');
 
 							if (line.size() - strPos + 1 >= strLen)
 							{
 								str2 = line.substr(strPos, strLen);
 
-								sections.back().addToggle(vec2(x, y), vec2(w, h), &style, str, &font);
+								sections.back().addToggle(vec2(x, y), 
+									vec2(w, h), &style, str, &font);
 							}
 						}
 					}
@@ -374,7 +385,8 @@ namespace UIx1
 						{
 							str = line.substr(strPos, strLen);
 
-							sections.back().addTextbox(vec2(x, y), vec2(w, h), &style, str, &font);
+							sections.back().addTextbox(vec2(x, y), 
+								vec2(w, h), &style, str, &font);
 						}
 					}
 					break;
