@@ -36,13 +36,12 @@
 
 # TODO
 # Display text
-# Read Scale, Spacing, and Font from settings
 # Add color type
 # Read font size for Sections, Buttons, Toggles, and Text
 # Read Button and Toggle action
 
 
-? 0750 0450 050 030 04 "SourceCodePro.ttf"
+? 0750 0450 050 020 04 "SourceCodePro.ttf"
 
 C 2F373F 1F272F FFFFFF
 S 00 00 09 02 "Customization"

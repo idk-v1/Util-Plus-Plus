@@ -10,6 +10,7 @@ namespace UIx1
 
 	struct Style
 	{
+		Style() {}
 		Style(int pScale, int pRad, int pSpace)
 		{
 			scale = pScale;
@@ -18,6 +19,19 @@ namespace UIx1
 		}
 
 		int scale, rad, space;
+	};
+
+	struct Color
+	{
+		Color() {}
+		Color(sf::Color pFront, sf::Color pBack, sf::Color pText)
+		{
+			front = pFront;
+			back = pBack;
+			text = pText;
+		}
+
+		sf::Color front, back, text;
 	};
 
 	class RoundedRect : public sf::Drawable
@@ -256,10 +270,8 @@ namespace UIx1
 	{
 	public:
 		UI() {}
-		UI(std::string pFilename, std::string pFontName, 
-			sf::Vector2u* winSize = nullptr)
+		UI(std::string pFilename, sf::Vector2u* winSize = nullptr)
 		{
-			font.loadFromFile(pFontName);
 			loadFile(pFilename, winSize);
 		}
 
@@ -287,6 +299,47 @@ namespace UIx1
 			int x, y, w, h;
 			int strLen, strPos;
 			std::string str, str2;
+
+			for (auto& line : lines)
+				if (line.at(0) == '?')
+				{
+					if (winSize != nullptr && line.size() > 18)
+					{
+						winSize->x =
+							1000 * (line.at(1) - '0') +
+							100 * (line.at(2) - '0') +
+							10 * (line.at(3) - '0') +
+							1 * (line.at(4) - '0');
+						winSize->y =
+							1000 * (line.at(5) - '0') +
+							100 * (line.at(6) - '0') +
+							10 * (line.at(7) - '0') +
+							1 * (line.at(8) - '0');
+						style.scale =
+							100 * (line.at(9) - '0') +
+							10 * (line.at(10) - '0') +
+							1 * (line.at(11) - '0');
+						style.rad =
+							100 * (line.at(12) - '0') +
+							10 * (line.at(13) - '0') +
+							1 * (line.at(14) - '0');
+						style.space =
+							10 * (line.at(15) - '0') +
+							1 * (line.at(16) - '0');
+
+						strPos = 19;
+						strLen = 10 * (line.at(17) - '0') + (line.at(18) - '0');
+						if (line.size() - strPos + 1 >= strLen)
+						{
+							str = line.substr(strPos, strLen);
+
+							font.loadFromFile(str);
+						}
+					}
+					break;
+				}
+
+
 			for (auto& line : lines)
 			{
 				switch (line.at(0))
@@ -305,11 +358,11 @@ namespace UIx1
 						if (line.size() - 10 >= strLen)
 							str = line.substr(strPos, strLen);
 
-						addSection(vec2(x, y), vec2(w, h), 
+						addSection(vec2(x, y), vec2(w, h),
 							&style, str, &font);
 					}
 					break;
-					
+
 				case 'B':
 				case 'b':
 					if (lines.size() >= 10)
@@ -326,7 +379,7 @@ namespace UIx1
 							str = line.substr(strPos, strLen);
 
 							strPos += strLen + 2;
-							strLen = 10 * (line.at(strPos - 2) - '0') + 
+							strLen = 10 * (line.at(strPos - 2) - '0') +
 								(line.at(strPos - 1) - '0');
 
 							if (line.size() - strPos + 1 >= strLen)
@@ -356,14 +409,14 @@ namespace UIx1
 							str = line.substr(strPos, strLen);
 
 							strPos += strLen + 2;
-							strLen = 10 * (line.at(strPos - 2) - '0') + 
+							strLen = 10 * (line.at(strPos - 2) - '0') +
 								(line.at(strPos - 1) - '0');
 
 							if (line.size() - strPos + 1 >= strLen)
 							{
 								str2 = line.substr(strPos, strLen);
 
-								sections.back().addToggle(vec2(x, y), 
+								sections.back().addToggle(vec2(x, y),
 									vec2(w, h), &style, str, &font);
 							}
 						}
@@ -385,25 +438,9 @@ namespace UIx1
 						{
 							str = line.substr(strPos, strLen);
 
-							sections.back().addTextbox(vec2(x, y), 
+							sections.back().addTextbox(vec2(x, y),
 								vec2(w, h), &style, str, &font);
 						}
-					}
-					break;
-
-				case '?':
-					if (winSize != nullptr && line.size() > 8)
-					{
-						winSize->x = 
-							1000 * (line.at(1) - '0') + 
-							100 * (line.at(2) - '0') + 
-							10 * (line.at(3) - '0') + 
-							1 * (line.at(4) - '0');
-						winSize->y = 
-							1000 * (line.at(5) - '0') + 
-							100 * (line.at(6) - '0') + 
-							10 * (line.at(7) - '0') + 
-							1 * (line.at(8) - '0');
 					}
 					break;
 				}
@@ -466,7 +503,7 @@ namespace UIx1
 
 		std::vector<Section> sections;
 		sf::Font font;
-		Style style = Style(50, 20, 4);
+		Style style;
 	};
 
 }

@@ -4,7 +4,7 @@
 int main()
 {
 	sf::Vector2u winSize;
-	UIx1::UI ui(".layout", "SourceCodePro.ttf", &winSize);
+	UIx1::UI ui(".layout", &winSize);
 
 	sf::RenderWindow win(sf::VideoMode(winSize.x, winSize.y), "");
 	while (win.isOpen())
