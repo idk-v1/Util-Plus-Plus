@@ -1,5 +1,50 @@
-? 0750 0450
+# Layout settings
 
+# Whitespace will be ignored (Spaces and tabs)
+# Each line is one element
+# Values are not separated by anything, just the known length of the type
+
+# Types:
+# The first character of a line is a type. Case doesn't matter.
+
+# '#' Comment
+# Ignores line.
+
+# '?' Settings <width: ####, height: ####, scale: ###, corner radius: ###, spacing: ##, font: "">
+# Only the first settings will be used.
+
+# 'S' Section <pos x: ##, pos y: ##, width: ##, height: ##, title: "", font size: ##>
+# Sections are designed to hold other UI elements and divide them into categories.
+# Sections will be one unit taller to fit the title.
+
+# I didn't know how to make inputs useful enough, while still having them replacable.
+# My solution was having inputs run an external executable.
+
+# 'B' Button <pos x: ##, pos y: ##, width: ##, height: ##, label: "", font size: ##, exec: "">
+# Buttons run <exec> when clicked.
+
+# 'T' Toggle <pos x: ##, pos y: ##, width: ##, height: ##, label: "", font size: ##, exec: "">
+# Toggles also need to have a "Q_"<exec> file that will be run on startup and click.
+# Toggles run <exec> when clicked, then "Q_"<exec>. "Q_"<exec> should return 1 or 0.
+
+# 'X' Textbox <pos x: ##, pos y: ##, width: ##, height: ##, text: "", font size: ##>
+# Just displays text, no interaction.
+
+# 'C': Color <hex front: RRGGBB, hex back: RRGGBB, hex text: RRGGBB>
+# Sets the colors of elements created after it.
+
+
+# TODO
+# Display text
+# Read Scale, Spacing, and Font from settings
+# Add color type
+# Read font size for Sections, Buttons, Toggles, and Text
+# Read Button and Toggle action
+
+
+? 0750 0450 050 030 04 "SourceCodePro.ttf"
+
+C 2F373F 1F272F FFFFFF
 S 00 00 09 02 "Customization"
 	B 00 00 03 02 "Change Wallpaper" "ChWall.exe"
 	B 03 00 03 02 "Reload Wallpaper" "RlWall.exe"
@@ -17,11 +62,11 @@ S 00 06 09 02 "Hotkeys"
 	T 06 00 03 02 "Quick Close" "QCloseHK.exe"
 
 S 09 00 06 02 "About"
-	X 00 00 06 02 "Test"
+	X 00 00 06 02 "Test" 15
 
 S 09 03 06 02 "Edit Layout"
 	B 00 00 03 02 "Edit" "EditUI.exe"
-	B 03 00 03 02 "Docs" "OpenUIDocs.exe"
+	B 03 00 03 02 "Reset" "ResetUI.exe"
 
 S 09 06 06 02 "Source Code"
 	B 00 00 03 02 "UI Source" "OpenUISrc.exe"
