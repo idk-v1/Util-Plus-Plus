@@ -1,0 +1,65 @@
+# Layout settings
+
+# Whitespace will be ignored (Spaces and tabs)
+# Each line is one element
+# Values are separated by commas
+
+# Types:
+# The first character of a line is a type. Case doesn't matter.
+
+# '#' Comment
+# Ignores line.
+
+# '?' Settings <width: int, height: int, scale: int, corner radius: int, spacing: int, font: str>
+# Only the first settings will be used.
+
+# 'S' Section <pos x: int, pos y: int, width: int, height: int, title: str, font size: int>
+# Sections are designed to hold other UI elements and divide them into categories.
+# Sections will be one unit taller to fit the title.
+
+# I didn't know how to make inputs useful enough, while still having them replacable.
+# My solution was having inputs run an external executable.
+
+# 'B' Button <pos x: int, pos y: int, width: int, height: int, label: str, font size: int, exec: str>
+# Buttons run <exec> when clicked.
+
+# 'T' Toggle <pos x: int, pos y: int, width: int, height: int, label: str, font size: int, exec: str>
+# Toggles also need to have a "Q_"<exec> file that will be run on startup and click.
+# Toggles run <exec> when clicked, then "Q_"<exec>. "Q_"<exec> should return 1 or 0.
+
+# 'X' Textbox <pos x: int, pos y: int, width: int, height: int, text: str, font size: int>
+# Just displays text, no interaction.
+
+# 'C': Color RRGGBB format <front: hex, background: hex, hex text: hex>
+# Sets the colors of elements created after it.
+
+
+?, 750, 450, 50, 20, 4, "SourceCodePro.ttf"
+
+C, 2F373F, 1F272F, FFFFFF
+S, 0, 0, 9, 2, "Customization", 30
+	B, 0, 0, 3, 2, "Change Wallpaper", 20, "ChWall.exe"
+	B, 3, 0, 3, 2, "Reload Wallpaper", 20, "RlWall.exe"
+	T, 6, 0, 3, 2, "Show Seconds", 20, "ShowSec.exe"
+
+S, 0, 3, 9, 2, "Programs", 30
+	# HKCU\Environment\UserInitMprLogonScript
+	B, 0, 0, 3, 2, "Add Startup Program", 20, "AutoStart.exe" 
+	B, 3, 0, 3, 2, "Add Program to App List", 20, "AddProgList.exe"
+	B, 6, 0, 3, 2, "Universal Extractor", 20, "UniExtract.exe"
+
+S, 0, 6, 9, 2, "Hotkeys", 30
+	T, 0, 0, 3, 2, "Window Pinning", 20, "WinPinHK.exe"
+	T, 3, 0, 3, 2, "Process Explorer", 20, "ProcExpHK.exe"
+	T, 6, 0, 3, 2, "Quick Close", 20, "QCloseHK.exe"
+
+S, 9, 0, 6, 2, "About", 30
+	X, 0, 0, 6, 2, "Test", 15
+
+S, 9, 3, 6, 2, "Edit Layout", 30
+	B, 0, 0, 3, 2, "Edit", 20, "EditUI.exe"
+	B, 3, 0, 3, 2, "Reset", 20, "ResetUI.exe"
+
+S, 9, 6, 6, 2, "Source Code", 30
+	B, 0, 0, 3, 2, "UI Source", 20, "OpenUISrc.exe"
+	B, 3, 0, 3, 2, "Utils Source", 20, "OpenUtilSrc.exe"

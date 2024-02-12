@@ -133,7 +133,7 @@ namespace UIx1
 	public:
 		Button() {}
 		Button(vec2 pPos, vec2 pSize, Style* pStylePtr, std::string pLabelStr, 
-			sf::Font* pFontPtr) : Input(pPos, pSize, pStylePtr)
+			sf::Font* pFontPtr, std::string pExec) : Input(pPos, pSize, pStylePtr)
 		{
 
 		}
@@ -152,7 +152,7 @@ namespace UIx1
 	public:
 		Toggle() {}
 		Toggle(vec2 pPos, vec2 pSize, Style* pStylePtr, std::string pLabelStr, 
-			sf::Font* pFontPtr) : Input(pPos, pSize, pStylePtr)
+			sf::Font* pFontPtr, std::string pExec) : Input(pPos, pSize, pStylePtr)
 		{
 
 		}
@@ -209,17 +209,17 @@ namespace UIx1
 		}
 
 		void addButton(vec2 pPos, vec2 pSize, Style* pStylePtr, 
-			std::string str, sf::Font* pFontPtr)
+			std::string str, sf::Font* pFontPtr, std::string pExec)
 		{
 			inputs.push_back(new Button(vec2(pPos.x + pos.x, pPos.y + pos.y + 1), 
-				pSize, pStylePtr, str, pFontPtr));
+				pSize, pStylePtr, str, pFontPtr, pExec));
 		}
 
 		void addToggle(vec2 pPos, vec2 pSize, Style* pStylePtr,
-			std::string str, sf::Font* pFontPtr)
+			std::string str, sf::Font* pFontPtr, std::string pExec)
 		{
 			inputs.push_back(new Toggle(vec2(pPos.x + pos.x, pPos.y + pos.y + 1), 
-				pSize, pStylePtr, str, pFontPtr));
+				pSize, pStylePtr, str, pFontPtr, pExec));
 		}
 
 		void addTextbox(vec2 pPos, vec2 pSize, Style* pStylePtr,
@@ -227,6 +227,11 @@ namespace UIx1
 		{
 			inputs.push_back(new Textbox(vec2(pPos.x + pos.x, pPos.y + pos.y + 1),
 				pSize, pStylePtr, str, pFontPtr));
+		}
+
+		void setColor(sf::Color pFront, sf::Color pBackground, sf::Color pText)
+		{
+
 		}
 
 		Input* getInput(int pIndex)
@@ -282,167 +287,199 @@ namespace UIx1
 				pStylePtr, pString, pFontPtr));
 		}
 
-		Section* getSectionPtr(int pIndex)
+		Section* getSectionPtr(size_t pIndex)
 		{
 			if (pIndex >= 0 && pIndex < sections.size())
 				return &sections[pIndex];
 			return nullptr;
 		}
 
-		int numSection()
+		size_t numSection()
 		{
 			return sections.size();
 		}
 
-		void parseLines(std::vector<std::string>& lines, sf::Vector2u* winSize)
+		size_t findComma(std::string& pStr, size_t pStart)
 		{
-			int x, y, w, h;
-			int strLen, strPos;
-			std::string str, str2;
+			bool inQuote = false;
+			for (size_t i = pStart; i < pStr.size(); i++)
+			{
+				if (pStr.at(i) == '"')
+					inQuote = !inQuote;
+				else if (pStr.at(i) == ',' && !inQuote)
+					return i;
+			}
+			return std::string::npos;
+		}
+
+		int readInt(std::string& pVal, size_t& pStart)
+		{
+			int val;
+			size_t end = findComma(pVal, ++pStart);
+
+			try
+			{
+				val = std::stoi(pVal.substr(pStart, end - pStart));
+			}
+			catch (std::invalid_argument const& ex)
+			{
+				printf("ERR: Expected int: %s\n", pVal.data());
+				val = 0;
+			}
+
+			pStart = end;
+			return val;
+		}
+
+		sf::Color readHex(std::string& pVal, size_t& pStart)
+		{
+			unsigned int val;
+			size_t end = findComma(pVal, ++pStart);
+
+			try
+			{
+				if (end - pStart <= 6)
+					val = std::stoull(pVal.substr(pStart, end - pStart), nullptr, 16);
+				else	
+					val = std::stoull(pVal.substr(pStart, end - pStart) + "FF", nullptr, 16);
+			}
+			catch (std::invalid_argument const& ex)
+			{
+				printf("ERR: Expected hex: %s\n", pVal.data());
+				val = 0;
+			}
+
+			pStart = end;
+			return sf::Color(val);
+		}
+
+		std::string readStr(std::string pVal, size_t& pStart)
+		{
+			std::string str;
+			size_t end = findComma(pVal, ++pStart);
+
+			str = pVal.substr(pStart, end - pStart);
+			pStart = end;
+
+			return str;
+		}
+
+		void readLines(std::vector<std::string>& lines, sf::Vector2u* winSize)
+		{
+			size_t index;
+
+			int numI;
+			int num[5];
+
+			int hexI;
+			sf::Color hex[3];
+
+			int strI;
+			std::string str[2];
 
 			for (auto& line : lines)
 				if (line.at(0) == '?')
 				{
-					if (winSize != nullptr && line.size() > 18)
-					{
-						winSize->x =
-							1000 * (line.at(1) - '0') +
-							100 * (line.at(2) - '0') +
-							10 * (line.at(3) - '0') +
-							1 * (line.at(4) - '0');
-						winSize->y =
-							1000 * (line.at(5) - '0') +
-							100 * (line.at(6) - '0') +
-							10 * (line.at(7) - '0') +
-							1 * (line.at(8) - '0');
-						style.scale =
-							100 * (line.at(9) - '0') +
-							10 * (line.at(10) - '0') +
-							1 * (line.at(11) - '0');
-						style.rad =
-							100 * (line.at(12) - '0') +
-							10 * (line.at(13) - '0') +
-							1 * (line.at(14) - '0');
-						style.space =
-							10 * (line.at(15) - '0') +
-							1 * (line.at(16) - '0');
+					numI = hexI = strI = 0;
+					index = findComma(line, 0);
 
-						strPos = 19;
-						strLen = 10 * (line.at(17) - '0') + (line.at(18) - '0');
-						if (line.size() - strPos + 1 >= strLen)
-						{
-							str = line.substr(strPos, strLen);
+					num[numI++] = readInt(line, index);
+					num[numI++] = readInt(line, index);
+					num[numI++] = readInt(line, index);
+					num[numI++] = readInt(line, index);
+					num[numI++] = readInt(line, index);
+					str[strI++] = readStr(line, index);
 
-							font.loadFromFile(str);
-						}
-					}
+					printf("?, %d, %d, %d, %d, %s\n", num[0], num[1], num[2], num[3], str[0].data());
+					
+					winSize->x  = num[0];
+					winSize->y  = num[1];
+					style.scale = num[2];
+					style.rad   = num[3];
+					style.space = num[4];
+					font.loadFromFile(str[0]);
 					break;
 				}
 
-
 			for (auto& line : lines)
 			{
+				numI = hexI = strI = 0;
+				index = findComma(line, 0);
+
 				switch (line.at(0))
 				{
 				case 'S':
-				case 's':
-					if (lines.size() >= 10)
-					{
-						x = 10 * (line.at(1) - '0') + (line.at(2) - '0');
-						y = 10 * (line.at(3) - '0') + (line.at(4) - '0');
-						w = 10 * (line.at(5) - '0') + (line.at(6) - '0');
-						h = 10 * (line.at(7) - '0') + (line.at(8) - '0');
+				case 's': // Section
+					num[numI++] = readInt(line, index);
+					num[numI++] = readInt(line, index);
+					num[numI++] = readInt(line, index);
+					num[numI++] = readInt(line, index);
+					str[strI++] = readStr(line, index);
+					num[numI++] = readInt(line, index);
 
-						strPos = 11;
-						strLen = 10 * (line.at(9) - '0') + (line.at(10) - '0');
-						if (line.size() - 10 >= strLen)
-							str = line.substr(strPos, strLen);
+					printf("S, %d, %d, %d, %d, %s, %d\n", num[0], num[1], num[2], num[3], str[0].data(), num[4]);
+					
+					addSection(vec2(num[0], num[1]), vec2(num[2], num[3]), &style, str[0], &font);
 
-						addSection(vec2(x, y), vec2(w, h),
-							&style, str, &font);
-					}
 					break;
-
 				case 'B':
-				case 'b':
-					if (lines.size() >= 10)
-					{
-						x = 10 * (line.at(1) - '0') + (line.at(2) - '0');
-						y = 10 * (line.at(3) - '0') + (line.at(4) - '0');
-						w = 10 * (line.at(5) - '0') + (line.at(6) - '0');
-						h = 10 * (line.at(7) - '0') + (line.at(8) - '0');
+				case 'b': // Button
+					num[numI++] = readInt(line, index);
+					num[numI++] = readInt(line, index);
+					num[numI++] = readInt(line, index);
+					num[numI++] = readInt(line, index);
+					str[strI++] = readStr(line, index);
+					num[numI++] = readInt(line, index);
+					str[strI++] = readStr(line, index); 
 
-						strPos = 11;
-						strLen = 10 * (line.at(9) - '0') + (line.at(10) - '0');
-						if (line.size() - strPos + 1 + 2 >= strLen)
-						{
-							str = line.substr(strPos, strLen);
-
-							strPos += strLen + 2;
-							strLen = 10 * (line.at(strPos - 2) - '0') +
-								(line.at(strPos - 1) - '0');
-
-							if (line.size() - strPos + 1 >= strLen)
-							{
-								str2 = line.substr(strPos, strLen);
-
-								sections.back().addButton(vec2(x, y),
-									vec2(w, h), &style, str, &font);
-							}
-						}
-					}
+					printf("B, %d, %d, %d, %d, %s, %d, %s\n", num[0], num[1], num[2], num[3], str[0].data(), num[4], str[1].data());
+					
+					sections.back().addButton(vec2(num[0], num[1]), vec2(num[2], num[3]), &style, str[0], &font, str[1]);
+					
 					break;
-
 				case 'T':
-				case 't':
-					if (lines.size() >= 10)
-					{
-						x = 10 * (line.at(1) - '0') + (line.at(2) - '0');
-						y = 10 * (line.at(3) - '0') + (line.at(4) - '0');
-						w = 10 * (line.at(5) - '0') + (line.at(6) - '0');
-						h = 10 * (line.at(7) - '0') + (line.at(8) - '0');
+				case 't': // Toggle
+					num[numI++] = readInt(line, index);
+					num[numI++] = readInt(line, index);
+					num[numI++] = readInt(line, index);
+					num[numI++] = readInt(line, index);
+					str[strI++] = readStr(line, index);
+					num[numI++] = readInt(line, index);
+					str[strI++] = readStr(line, index);
 
-						strPos = 11;
-						strLen = 10 * (line.at(9) - '0') + (line.at(10) - '0');
-						if (line.size() - strPos + 1 + 2 >= strLen)
-						{
-							str = line.substr(strPos, strLen);
-
-							strPos += strLen + 2;
-							strLen = 10 * (line.at(strPos - 2) - '0') +
-								(line.at(strPos - 1) - '0');
-
-							if (line.size() - strPos + 1 >= strLen)
-							{
-								str2 = line.substr(strPos, strLen);
-
-								sections.back().addToggle(vec2(x, y),
-									vec2(w, h), &style, str, &font);
-							}
-						}
-					}
+					printf("T, %d, %d, %d, %d, %s, %d, %s\n", num[0], num[1], num[2], num[3], str[0].data(), num[4], str[1].data());
+					
+					sections.back().addToggle(vec2(num[0], num[1]), vec2(num[2], num[3]), &style, str[0], &font, str[1]);
+					
 					break;
-
 				case 'X':
-				case 'x':
-					if (lines.size() >= 10)
-					{
-						x = 10 * (line.at(1) - '0') + (line.at(2) - '0');
-						y = 10 * (line.at(3) - '0') + (line.at(4) - '0');
-						w = 10 * (line.at(5) - '0') + (line.at(6) - '0');
-						h = 10 * (line.at(7) - '0') + (line.at(8) - '0');
+				case 'x': // Textbox
+					num[numI++] = readInt(line, index);
+					num[numI++] = readInt(line, index);
+					num[numI++] = readInt(line, index);
+					num[numI++] = readInt(line, index);
+					str[strI++] = readStr(line, index);
+					num[numI++] = readInt(line, index);
 
-						strPos = 11;
-						strLen = 10 * (line.at(9) - '0') + (line.at(10) - '0');
-						if (line.size() - strPos + 1 + 2 >= strLen)
-						{
-							str = line.substr(strPos, strLen);
+					printf("X, %d, %d, %d, %d, %s, %d\n", num[0], num[1], num[2], num[3], str[0].data(), num[4]);
+					
+					sections.back().addTextbox(vec2(num[0], num[1]), vec2(num[2], num[3]), &style, str[0], &font);
 
-							sections.back().addTextbox(vec2(x, y),
-								vec2(w, h), &style, str, &font);
-						}
-					}
 					break;
+				case 'C':
+				case 'c': // Color
+					hex[hexI++] = readHex(line, index);
+					hex[hexI++] = readHex(line, index);
+					hex[hexI++] = readHex(line, index);
+
+					printf("C, (%d, %d, %d, %d), (%d, %d, %d, %d), (%d, %d, %d, %d)\n", hex[0].r, hex[0].g, hex[0].b, hex[0].a, hex[1].r, hex[1].g, hex[1].b, hex[1].a, hex[2].r, hex[2].g, hex[2].b, hex[2].a);
+					
+					color.front = hex[0];
+					color.back = hex[1];
+					color.text = hex[2];
+
+					break;
+
 				}
 			}
 		}
@@ -452,7 +489,6 @@ namespace UIx1
 			std::ifstream file(pFileName);
 			std::string data, clean;
 			std::vector<std::string> lines;
-			int strLen;
 			bool inQuote = false;
 			
 			if (file.is_open())
@@ -463,32 +499,15 @@ namespace UIx1
 					for (char c : data)
 					{
 						if (c == '"')
-						{
 							inQuote = !inQuote;
-							if (inQuote)
-							{
-								clean.push_back('0');
-								clean.push_back('0');
-								strLen = 0;
-							}
-							else
-							{
-								clean[clean.size() -1 - strLen] += strLen % 10;
-								clean[clean.size() -2 - strLen] += strLen / 10;
-							}
-						}
 						else if (c != '\t' && (c != ' ' || inQuote))
-						{
 							clean.push_back(c);
-							if (inQuote)
-								strLen++;
-						}
 					}
 					if (clean.size() && clean.at(0) != '#')
 						lines.push_back(clean);
 				}
 				file.close();
-				parseLines(lines, winSize);
+				readLines(lines, winSize);
 				return true;
 			}
 			return false;
@@ -504,6 +523,7 @@ namespace UIx1
 		std::vector<Section> sections;
 		sf::Font font;
 		Style style;
+		Color color;
 	};
 
 }

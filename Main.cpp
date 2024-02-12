@@ -4,9 +4,9 @@
 int main()
 {
 	sf::Vector2u winSize;
-	UIx1::UI ui(".layout", &winSize);
+	UIx1::UI ui(".ui", &winSize);
 
-	sf::RenderWindow win(sf::VideoMode(winSize.x, winSize.y), "");
+	sf::RenderWindow win(sf::VideoMode(winSize.x, winSize.y), "UI");
 	while (win.isOpen())
 	{
 		sf::Event e;
