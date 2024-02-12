@@ -47,14 +47,14 @@ namespace UIx1
 
 			wRect.setSize(
 				vec2(size.x * st->scale - 2 * st->space * spaceLvl,
-				size.y * st->scale - 2 * st->rad - 2 * st->space * spaceLvl));
+				size.y * st->scale - 2 * st->rad - 2 * st->space));
 			wRect.setPosition(pos.x * st->scale + st->space * spaceLvl,
-				pos.y * st->scale + st->rad + st->space * spaceLvl);
+				pos.y * st->scale + st->rad + st->space);
 
 			hRect.setSize(
-				vec2(size.x * st->scale - 2 * st->rad - 2 * st->space * spaceLvl,
+				vec2(size.x * st->scale - 2 * st->rad - 2 * st->space,
 				size.y * st->scale - 2 * st->space * spaceLvl));
-			hRect.setPosition(pos.x * st->scale + st->rad + st->space * spaceLvl,
+			hRect.setPosition(pos.x * st->scale + st->rad + st->space,
 				pos.y * st->scale + st->space * spaceLvl);
 
 			tlCirc.setRadius(st->rad - st->space * spaceLvl);
@@ -115,7 +115,11 @@ namespace UIx1
 			size = pSize;
 			st = pStylePtr;
 
-			rect = RoundedRect(pos, size, st);
+			rect = RoundedRect(pos, size, st, 2);
+		}
+
+		virtual void setColor(Color pColor)
+		{
 		}
 
 	protected:
@@ -133,18 +137,34 @@ namespace UIx1
 	public:
 		Button() {}
 		Button(vec2 pPos, vec2 pSize, Style* pStylePtr, std::string pLabelStr, 
-			sf::Font* pFontPtr, std::string pExec) : Input(pPos, pSize, pStylePtr)
+			sf::Font* pFontPtr, std::string pExec, int pFontSize) : Input(pPos, pSize, pStylePtr)
 		{
+			text.setFont(*pFontPtr);
+			text.setString(pLabelStr);
+			text.setCharacterSize(pFontSize);
 
+			text.setPosition(
+				pos.x * st->scale + (size.x * st->scale - text.getLocalBounds().width) / 2.f - st->space / 2.f,
+				pos.y * st->scale + (size.y * st->scale - text.getLocalBounds().height) / 2.f - st->space);
+		}
+
+		void setColor(Color pColor)
+		{
+			rect.setColor(pColor.back);
+			labelRect.setColor(pColor.front);
+			text.setFillColor(pColor.text);
 		}
 
 	private:
 		void draw(sf::RenderTarget& target, sf::RenderStates states) const
 		{
 			target.draw(rect, states);
+			target.draw(labelRect, states);
+			target.draw(text, states);
 		}
 
 		RoundedRect labelRect;
+		sf::Text text;
 	};
 
 	class Toggle : public Input
@@ -152,16 +172,34 @@ namespace UIx1
 	public:
 		Toggle() {}
 		Toggle(vec2 pPos, vec2 pSize, Style* pStylePtr, std::string pLabelStr, 
-			sf::Font* pFontPtr, std::string pExec) : Input(pPos, pSize, pStylePtr)
+			sf::Font* pFontPtr, std::string pExec, int pFontSize) : Input(pPos, pSize, pStylePtr)
 		{
+			text.setFont(*pFontPtr);
+			text.setString(pLabelStr);
+			text.setCharacterSize(pFontSize);
 
+			text.setPosition(
+				pos.x * st->scale + (size.x * st->scale - text.getLocalBounds().width) / 2.f - st->space / 2.f,
+				pos.y * st->scale + (size.y * st->scale - text.getLocalBounds().height) / 2.f - st->space);
+		}
+
+		void setColor(Color pColor)
+		{
+			rect.setColor(pColor.back);
+			labelRect.setColor(pColor.front);
+			text.setFillColor(pColor.text);
 		}
 
 	private:
 		void draw(sf::RenderTarget& target, sf::RenderStates states) const
 		{
 			target.draw(rect, states);
+			target.draw(labelRect, states);
+			target.draw(text, states);
 		}
+
+		RoundedRect labelRect;
+		sf::Text text;
 	};
 
 	class Textbox : public Input
@@ -169,16 +207,31 @@ namespace UIx1
 	public:
 		Textbox() {}
 		Textbox(vec2 pPos, vec2 pSize, Style* pStylePtr, std::string pLabelStr, 
-			sf::Font* pFontPtr) : Input(pPos, pSize, pStylePtr)
+			sf::Font* pFontPtr, int pFontSize) : Input(pPos, pSize, pStylePtr)
 		{
+			text.setFont(*pFontPtr);
+			text.setString(pLabelStr);
+			text.setCharacterSize(pFontSize);
 
+			text.setPosition(
+				pos.x * st->scale + (size.x * st->scale - text.getLocalBounds().width) / 2.f - st->space / 2.f,
+				pos.y * st->scale + (size.y * st->scale - text.getLocalBounds().height) / 2.f - st->space);
+		}
+
+		void setColor(Color pColor)
+		{
+			rect.setColor(pColor.back);
+			text.setFillColor(pColor.text);
 		}
 
 	private:
 		void draw(sf::RenderTarget& target, sf::RenderStates states) const
 		{
 			target.draw(rect, states);
+			target.draw(text, states);
 		}
+
+		sf::Text text;
 	};
 
 	class Section : public sf::Drawable
@@ -186,16 +239,18 @@ namespace UIx1
 	public:
 		Section() {}
 		Section(vec2 pPos, vec2 pSize, Style* pStylePtr, std::string pLabelStr,
-			sf::Font* pFontPtr)
+			sf::Font* pFontPtr, Color* pColorPtr, int pFontSize)
 		{
 			pos = pPos;
 			size = vec2(pSize.x, pSize.y + 1);
 			st = pStylePtr;
+			colorPtr = pColorPtr;
 
 			labelStr = pLabelStr;
 			fontPtr = pFontPtr;
 
 			label.setFont(*fontPtr);
+			label.setCharacterSize(pFontSize);
 			label.setString(labelStr);
 			label.setPosition(pos.x * st->scale + 
 				(size.x * st->scale - label.getLocalBounds().width) / 2.f, 
@@ -204,34 +259,33 @@ namespace UIx1
 			labelRect = RoundedRect(pos, vec2(size.x, 1), st);
 			bodyRect = RoundedRect(pos, size, st);
 
-			labelRect.setColor(labelColor);
-			bodyRect.setColor(bodyColor);
+			labelRect.setColor(colorPtr->front);
+			bodyRect.setColor(colorPtr->back);
+			label.setFillColor(colorPtr->text);
 		}
 
 		void addButton(vec2 pPos, vec2 pSize, Style* pStylePtr, 
-			std::string str, sf::Font* pFontPtr, std::string pExec)
+			std::string str, sf::Font* pFontPtr, std::string pExec, int pFontSize)
 		{
 			inputs.push_back(new Button(vec2(pPos.x + pos.x, pPos.y + pos.y + 1), 
-				pSize, pStylePtr, str, pFontPtr, pExec));
+				pSize, pStylePtr, str, pFontPtr, pExec, pFontSize));
+			inputs.back()->setColor(*colorPtr);
 		}
 
 		void addToggle(vec2 pPos, vec2 pSize, Style* pStylePtr,
-			std::string str, sf::Font* pFontPtr, std::string pExec)
+			std::string str, sf::Font* pFontPtr, std::string pExec, int pFontSize)
 		{
 			inputs.push_back(new Toggle(vec2(pPos.x + pos.x, pPos.y + pos.y + 1), 
-				pSize, pStylePtr, str, pFontPtr, pExec));
+				pSize, pStylePtr, str, pFontPtr, pExec, pFontSize));
+			inputs.back()->setColor(*colorPtr);
 		}
 
 		void addTextbox(vec2 pPos, vec2 pSize, Style* pStylePtr,
-			std::string str, sf::Font* pFontPtr)
+			std::string str, sf::Font* pFontPtr, int pFontSize)
 		{
 			inputs.push_back(new Textbox(vec2(pPos.x + pos.x, pPos.y + pos.y + 1),
-				pSize, pStylePtr, str, pFontPtr));
-		}
-
-		void setColor(sf::Color pFront, sf::Color pBackground, sf::Color pText)
-		{
-
+				pSize, pStylePtr, str, pFontPtr, pFontSize));
+			inputs.back()->setColor(*colorPtr);
 		}
 
 		Input* getInput(int pIndex)
@@ -257,8 +311,7 @@ namespace UIx1
 				target.draw(*input, states);
 		}
 
-		sf::Color labelColor = sf::Color(0x2F373FFF);
-		sf::Color bodyColor = sf::Color(0x1F272FFF);
+		Color* colorPtr;
 
 		std::vector<Input*> inputs;
 
@@ -281,10 +334,10 @@ namespace UIx1
 		}
 
 		void addSection(vec2 pPos, vec2 pSize, Style* pStylePtr, 
-			std::string pString, sf::Font* pFontPtr)
+			std::string pString, sf::Font* pFontPtr, int pFontSize)
 		{
 			sections.push_back(Section(pPos, pSize, 
-				pStylePtr, pString, pFontPtr));
+				pStylePtr, pString, pFontPtr, &color, pFontSize));
 		}
 
 		Section* getSectionPtr(size_t pIndex)
@@ -309,7 +362,7 @@ namespace UIx1
 				else if (pStr.at(i) == ',' && !inQuote)
 					return i;
 			}
-			return std::string::npos;
+			return pStr.size();
 		}
 
 		int readInt(std::string& pVal, size_t& pStart)
@@ -338,10 +391,10 @@ namespace UIx1
 
 			try
 			{
-				if (end - pStart <= 6)
-					val = std::stoull(pVal.substr(pStart, end - pStart), nullptr, 16);
-				else	
+				if (end - pStart == 6)
 					val = std::stoull(pVal.substr(pStart, end - pStart) + "FF", nullptr, 16);
+				else	
+					val = std::stoull(pVal.substr(pStart, end - pStart), nullptr, 16);
 			}
 			catch (std::invalid_argument const& ex)
 			{
@@ -389,8 +442,6 @@ namespace UIx1
 					num[numI++] = readInt(line, index);
 					num[numI++] = readInt(line, index);
 					str[strI++] = readStr(line, index);
-
-					printf("?, %d, %d, %d, %d, %s\n", num[0], num[1], num[2], num[3], str[0].data());
 					
 					winSize->x  = num[0];
 					winSize->y  = num[1];
@@ -416,10 +467,8 @@ namespace UIx1
 					num[numI++] = readInt(line, index);
 					str[strI++] = readStr(line, index);
 					num[numI++] = readInt(line, index);
-
-					printf("S, %d, %d, %d, %d, %s, %d\n", num[0], num[1], num[2], num[3], str[0].data(), num[4]);
 					
-					addSection(vec2(num[0], num[1]), vec2(num[2], num[3]), &style, str[0], &font);
+					addSection(vec2(num[0], num[1]), vec2(num[2], num[3]), &style, str[0], &font, num[4]);
 
 					break;
 				case 'B':
@@ -431,10 +480,8 @@ namespace UIx1
 					str[strI++] = readStr(line, index);
 					num[numI++] = readInt(line, index);
 					str[strI++] = readStr(line, index); 
-
-					printf("B, %d, %d, %d, %d, %s, %d, %s\n", num[0], num[1], num[2], num[3], str[0].data(), num[4], str[1].data());
 					
-					sections.back().addButton(vec2(num[0], num[1]), vec2(num[2], num[3]), &style, str[0], &font, str[1]);
+					sections.back().addButton(vec2(num[0], num[1]), vec2(num[2], num[3]), &style, str[0], &font, str[1], num[4]);
 					
 					break;
 				case 'T':
@@ -446,10 +493,8 @@ namespace UIx1
 					str[strI++] = readStr(line, index);
 					num[numI++] = readInt(line, index);
 					str[strI++] = readStr(line, index);
-
-					printf("T, %d, %d, %d, %d, %s, %d, %s\n", num[0], num[1], num[2], num[3], str[0].data(), num[4], str[1].data());
 					
-					sections.back().addToggle(vec2(num[0], num[1]), vec2(num[2], num[3]), &style, str[0], &font, str[1]);
+					sections.back().addToggle(vec2(num[0], num[1]), vec2(num[2], num[3]), &style, str[0], &font, str[1], num[4]);
 					
 					break;
 				case 'X':
@@ -460,10 +505,8 @@ namespace UIx1
 					num[numI++] = readInt(line, index);
 					str[strI++] = readStr(line, index);
 					num[numI++] = readInt(line, index);
-
-					printf("X, %d, %d, %d, %d, %s, %d\n", num[0], num[1], num[2], num[3], str[0].data(), num[4]);
 					
-					sections.back().addTextbox(vec2(num[0], num[1]), vec2(num[2], num[3]), &style, str[0], &font);
+					sections.back().addTextbox(vec2(num[0], num[1]), vec2(num[2], num[3]), &style, str[0], &font, num[4]);
 
 					break;
 				case 'C':
@@ -471,8 +514,6 @@ namespace UIx1
 					hex[hexI++] = readHex(line, index);
 					hex[hexI++] = readHex(line, index);
 					hex[hexI++] = readHex(line, index);
-
-					printf("C, (%d, %d, %d, %d), (%d, %d, %d, %d), (%d, %d, %d, %d)\n", hex[0].r, hex[0].g, hex[0].b, hex[0].a, hex[1].r, hex[1].g, hex[1].b, hex[1].a, hex[2].r, hex[2].g, hex[2].b, hex[2].a);
 					
 					color.front = hex[0];
 					color.back = hex[1];
@@ -500,6 +541,8 @@ namespace UIx1
 					{
 						if (c == '"')
 							inQuote = !inQuote;
+						else if (c == '`')
+							clean.push_back('\n');
 						else if (c != '\t' && (c != ' ' || inQuote))
 							clean.push_back(c);
 					}
