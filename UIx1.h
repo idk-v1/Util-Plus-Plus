@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include <fstream>
+#include <Windows.h>
 
 namespace UIx1
 {
@@ -76,6 +77,15 @@ namespace UIx1
 				(pos.y + size.y) * st->scale - 2 * st->rad + st->space * spaceLvl);
 		}
 
+		sf::IntRect getRect()
+		{
+			return sf::IntRect(
+				pos.x * st->scale, 
+				pos.y * st->scale, 
+				size.x * st->scale, 
+				size.y * st->scale);
+		}
+
 		void setColor(sf::Color color)
 		{
 			wRect.setFillColor(color);
@@ -109,97 +119,134 @@ namespace UIx1
 	{
 	public:
 		Input() {}
-		Input(vec2 pPos, vec2 pSize, Style* pStylePtr)
+		Input(vec2 pPos, vec2 pSize, Style* pStylePtr, std::string pLabelStr, sf::Font* pFontPtr, int pFontSize)
 		{
 			pos = pPos;
 			size = pSize;
 			st = pStylePtr;
 
 			rect = RoundedRect(pos, size, st, 2);
+
+			text.setFont(*pFontPtr);
+			text.setString(pLabelStr);
+			text.setCharacterSize(pFontSize);
+
+			text.setPosition(
+				pos.x * st->scale + (size.x * st->scale - text.getLocalBounds().width) / 2.f - st->space / 2.f,
+				pos.y * st->scale + (size.y * st->scale - text.getLocalBounds().height) / 2.f - st->space);
 		}
 
 		virtual void setColor(Color pColor)
 		{
+			color = pColor;
+			rect.setColor(color.back);
+			text.setFillColor(color.text);
 		}
+
+		virtual void click() {}
+
+		bool hoverCheck(sf::Vector2i pMousePos)
+		{
+			return rect.getRect().contains(pMousePos);
+		}
+
+		virtual void hoverColor(bool pHover) {}
 
 	protected:
 		Style* st;
 		vec2 pos, size;
 		RoundedRect rect;
+		Color color;
+		sf::Text text;
 
 	private:
 		virtual void draw(sf::RenderTarget& target, 
 			sf::RenderStates states) const {}
 	};
 
-	class Button : public Input
+	class ExecInput : public Input
+	{
+	public:
+		ExecInput() {}
+		ExecInput(vec2 pPos, vec2 pSize, Style* pStylePtr, std::string pLabelStr,
+			sf::Font* pFontPtr, std::string pExec, int pFontSize) : Input(pPos, pSize, pStylePtr, pLabelStr, pFontPtr, pFontSize)
+		{
+			exec = pExec;
+		}
+
+		void hoverColor(bool pHover)
+		{
+			setColor(color);
+			if (pHover)
+				rect.setColor(color.back + sf::Color(0x3F3F3FFF));
+		}
+
+		bool startProc(std::string pExec, std::string pArgs = "", int pTimeout = INFINITE)
+		{
+			unsigned long exit, status;
+			STARTUPINFOA info = { sizeof(info) };
+			PROCESS_INFORMATION processInfo;
+			if (CreateProcessA(pExec.data(), LPSTR(pArgs.data()), NULL, NULL, TRUE, 0, NULL, NULL, &info, &processInfo))
+			{
+				WaitForSingleObject(processInfo.hProcess, pTimeout);
+				status = GetExitCodeProcess(processInfo.hProcess, &exit);
+				CloseHandle(processInfo.hProcess);
+				CloseHandle(processInfo.hThread);
+
+				if (status != STILL_ACTIVE && status)
+					return exit;
+			}
+			else
+				printf("Failed to start \"%s\"\n", pExec.data());
+			return 0;
+		}
+
+	protected:
+		std::string exec;
+	};
+
+	class Button : public ExecInput
 	{
 	public:
 		Button() {}
-		Button(vec2 pPos, vec2 pSize, Style* pStylePtr, std::string pLabelStr, 
-			sf::Font* pFontPtr, std::string pExec, int pFontSize) : Input(pPos, pSize, pStylePtr)
-		{
-			text.setFont(*pFontPtr);
-			text.setString(pLabelStr);
-			text.setCharacterSize(pFontSize);
+		Button(vec2 pPos, vec2 pSize, Style* pStylePtr, std::string pLabelStr,
+			sf::Font* pFontPtr, std::string pExec, int pFontSize) :
+			ExecInput(pPos, pSize, pStylePtr, pLabelStr,
+				pFontPtr, pExec, pFontSize) {}
 
-			text.setPosition(
-				pos.x * st->scale + (size.x * st->scale - text.getLocalBounds().width) / 2.f - st->space / 2.f,
-				pos.y * st->scale + (size.y * st->scale - text.getLocalBounds().height) / 2.f - st->space);
-		}
-
-		void setColor(Color pColor)
+		void click()
 		{
-			rect.setColor(pColor.back);
-			labelRect.setColor(pColor.front);
-			text.setFillColor(pColor.text);
+			startProc(exec);
 		}
 
 	private:
 		void draw(sf::RenderTarget& target, sf::RenderStates states) const
 		{
 			target.draw(rect, states);
-			//target.draw(labelRect, states);
 			target.draw(text, states);
 		}
-
-		RoundedRect labelRect;
-		sf::Text text;
 	};
 
-	class Toggle : public Input
+	class Toggle : public ExecInput
 	{
 	public:
 		Toggle() {}
-		Toggle(vec2 pPos, vec2 pSize, Style* pStylePtr, std::string pLabelStr, 
-			sf::Font* pFontPtr, std::string pExec, int pFontSize) : Input(pPos, pSize, pStylePtr)
-		{
-			text.setFont(*pFontPtr);
-			text.setString(pLabelStr);
-			text.setCharacterSize(pFontSize);
+		Toggle(vec2 pPos, vec2 pSize, Style* pStylePtr, std::string pLabelStr,
+			sf::Font* pFontPtr, std::string pExec, int pFontSize) :
+			ExecInput(pPos, pSize, pStylePtr, pLabelStr,
+				pFontPtr, pExec, pFontSize) {}
 
-			text.setPosition(
-				pos.x * st->scale + (size.x * st->scale - text.getLocalBounds().width) / 2.f - st->space / 2.f,
-				pos.y * st->scale + (size.y * st->scale - text.getLocalBounds().height) / 2.f - st->space);
-		}
-
-		void setColor(Color pColor)
+		void click()
 		{
-			rect.setColor(pColor.back);
-			labelRect.setColor(pColor.front);
-			text.setFillColor(pColor.text);
+			startProc(exec, std::to_string(startProc("Q_" + exec)));
 		}
 
 	private:
 		void draw(sf::RenderTarget& target, sf::RenderStates states) const
 		{
 			target.draw(rect, states);
-			//target.draw(labelRect, states);
 			target.draw(text, states);
 		}
-
-		RoundedRect labelRect;
-		sf::Text text;
 	};
 
 	class Textbox : public Input
@@ -207,21 +254,8 @@ namespace UIx1
 	public:
 		Textbox() {}
 		Textbox(vec2 pPos, vec2 pSize, Style* pStylePtr, std::string pLabelStr, 
-			sf::Font* pFontPtr, int pFontSize) : Input(pPos, pSize, pStylePtr)
+			sf::Font* pFontPtr, int pFontSize) : Input(pPos, pSize, pStylePtr, pLabelStr, pFontPtr, pFontSize)
 		{
-			text.setFont(*pFontPtr);
-			text.setString(pLabelStr);
-			text.setCharacterSize(pFontSize);
-
-			text.setPosition(
-				pos.x * st->scale + (size.x * st->scale - text.getLocalBounds().width) / 2.f - st->space / 2.f,
-				pos.y * st->scale + (size.y * st->scale - text.getLocalBounds().height) / 2.f - st->space);
-		}
-
-		void setColor(Color pColor)
-		{
-			rect.setColor(pColor.back);
-			text.setFillColor(pColor.text);
 		}
 
 	private:
@@ -230,8 +264,6 @@ namespace UIx1
 			target.draw(rect, states);
 			target.draw(text, states);
 		}
-
-		sf::Text text;
 	};
 
 	class Section : public sf::Drawable
@@ -264,9 +296,11 @@ namespace UIx1
 			label.setFillColor(colorPtr->text);
 		}
 
-		void hoverCheck(sf::RenderWindow& pWin, bool pClick)
+		void hoverCheck(sf::Vector2i& pMousePos, bool pClick)
 		{
-
+			for (auto& input : inputs)
+				if (input->hoverCheck(pMousePos) && pClick)
+					input->click();
 		}
 
 		void addButton(vec2 pPos, vec2 pSize, Style* pStylePtr, 
@@ -391,8 +425,9 @@ namespace UIx1
 		void update(sf::RenderWindow& pWin)
 		{
 			bool click = sf::Mouse::isButtonPressed(sf::Mouse::Left);
+			sf::Vector2i mousePos = sf::Mouse::getPosition(pWin);
 			for (auto& sec : sections)
-				sec.hoverCheck(pWin, click && !clickLast);
+				sec.hoverCheck(mousePos, click && !clickLast);
 			clickLast = click;
 		}
 
