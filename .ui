@@ -66,11 +66,11 @@ S, 9, 0, 6, 2, "About", 30
 C, 2F373F, 1F272F, FFFFFF
 S, 9, 3, 6, 2, "Edit Layout", 30
 	C, 2F373F, 171F27, FFFFFF
-	B, 0, 0, 3, 2, "Edit", 20, "EditUI.exe"
-	B, 3, 0, 3, 2, "Reset", 20, "ResetUI.exe"
+	B, 0, 0, 3, 2, "Edit Layout", 15, "EditUI.exe"
+	B, 3, 0, 3, 2, "Reset Layout", 15, "ResetUI.exe"
 
 C, 2F373F, 1F272F, FFFFFF
 S, 9, 6, 6, 2, "Source Code", 30
 	C, 2F373F, 171F27, FFFFFF
-	B, 0, 0, 3, 2, "Utils Source", 15, "OpenUtilsSource.exe"
-	B, 3, 0, 3, 2, "UI Source", 15, "OpenUISrc.exe"
+	B, 0, 0, 3, 2, "Source Code", 15, "OpenSource.exe"
+	B, 3, 0, 3, 2, "Updates", 15, "OpenUpdates.exe"
