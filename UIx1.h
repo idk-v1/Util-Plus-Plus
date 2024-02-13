@@ -159,7 +159,7 @@ namespace UIx1
 		void draw(sf::RenderTarget& target, sf::RenderStates states) const
 		{
 			target.draw(rect, states);
-			target.draw(labelRect, states);
+			//target.draw(labelRect, states);
 			target.draw(text, states);
 		}
 
@@ -194,7 +194,7 @@ namespace UIx1
 		void draw(sf::RenderTarget& target, sf::RenderStates states) const
 		{
 			target.draw(rect, states);
-			target.draw(labelRect, states);
+			//target.draw(labelRect, states);
 			target.draw(text, states);
 		}
 
@@ -262,6 +262,11 @@ namespace UIx1
 			labelRect.setColor(colorPtr->front);
 			bodyRect.setColor(colorPtr->back);
 			label.setFillColor(colorPtr->text);
+		}
+
+		void hoverCheck(sf::RenderWindow& pWin, bool pClick)
+		{
+
 		}
 
 		void addButton(vec2 pPos, vec2 pSize, Style* pStylePtr, 
@@ -333,6 +338,37 @@ namespace UIx1
 			loadFile(pFilename, winSize);
 		}
 
+		bool loadFile(std::string pFileName, sf::Vector2u* winSize)
+		{
+			std::ifstream file(pFileName);
+			std::string data, clean;
+			std::vector<std::string> lines;
+			bool inQuote = false;
+
+			if (file.is_open())
+			{
+				while (std::getline(file, data))
+				{
+					clean.clear();
+					for (char c : data)
+					{
+						if (c == '"')
+							inQuote = !inQuote;
+						else if (c == '`')
+							clean.push_back('\n');
+						else if (c != '\t' && (c != ' ' || inQuote))
+							clean.push_back(c);
+					}
+					if (clean.size() && clean.at(0) != '#')
+						lines.push_back(clean);
+				}
+				file.close();
+				readLines(lines, winSize);
+				return true;
+			}
+			return false;
+		}
+
 		void addSection(vec2 pPos, vec2 pSize, Style* pStylePtr, 
 			std::string pString, sf::Font* pFontPtr, int pFontSize)
 		{
@@ -352,6 +388,15 @@ namespace UIx1
 			return sections.size();
 		}
 
+		void update(sf::RenderWindow& pWin)
+		{
+			bool click = sf::Mouse::isButtonPressed(sf::Mouse::Left);
+			for (auto& sec : sections)
+				sec.hoverCheck(pWin, click && !clickLast);
+			clickLast = click;
+		}
+
+	private:
 		size_t findComma(std::string& pStr, size_t pStart)
 		{
 			bool inQuote = false;
@@ -525,38 +570,6 @@ namespace UIx1
 			}
 		}
 
-		bool loadFile(std::string pFileName, sf::Vector2u* winSize)
-		{
-			std::ifstream file(pFileName);
-			std::string data, clean;
-			std::vector<std::string> lines;
-			bool inQuote = false;
-			
-			if (file.is_open())
-			{
-				while (std::getline(file, data))
-				{
-					clean.clear();
-					for (char c : data)
-					{
-						if (c == '"')
-							inQuote = !inQuote;
-						else if (c == '`')
-							clean.push_back('\n');
-						else if (c != '\t' && (c != ' ' || inQuote))
-							clean.push_back(c);
-					}
-					if (clean.size() && clean.at(0) != '#')
-						lines.push_back(clean);
-				}
-				file.close();
-				readLines(lines, winSize);
-				return true;
-			}
-			return false;
-		}
-
-	private:
 		void draw(sf::RenderTarget& target, sf::RenderStates states) const
 		{
 			for (auto& section : sections)
@@ -567,6 +580,7 @@ namespace UIx1
 		sf::Font font;
 		Style style;
 		Color color;
+		bool clickLast = false;
 	};
 
 }

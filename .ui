@@ -56,7 +56,7 @@ S, 0, 6, 9, 2, "Hotkeys", 30
 	C, 2F373F, 171F27, FFFFFF
 	T, 0, 0, 3, 2, "Window`Pinning", 15, "WinPinHK.exe"
 	T, 3, 0, 3, 2, "Process`Explorer", 15, "ProcExpHK.exe"
-	T, 6, 0, 3, 2, "Quick`Close", 15, "QCloseHK.exe"
+	T, 6, 0, 3, 2, "  Open`Powershell", 15, "OpenPwshHK.exe"
 
 C, 2F373F, 1F272F, FFFFFF
 S, 9, 0, 6, 2, "About", 30
@@ -72,5 +72,5 @@ S, 9, 3, 6, 2, "Edit Layout", 30
 C, 2F373F, 1F272F, FFFFFF
 S, 9, 6, 6, 2, "Source Code", 30
 	C, 2F373F, 171F27, FFFFFF
-	B, 0, 0, 3, 2, "UI Docs", 15, "OpenUIDocs.exe"
+	B, 0, 0, 3, 2, "Utils Source", 15, "OpenUtilsSource.exe"
 	B, 3, 0, 3, 2, "UI Source", 15, "OpenUISrc.exe"
