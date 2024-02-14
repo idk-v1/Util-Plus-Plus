@@ -559,7 +559,7 @@ namespace UIx1
 					num[numI++] = readInt(line, index);
 					str[strI++] = readStr(line, index);
 					num[numI++] = readInt(line, index);
-					str[strI++] = readStr(line, index); 
+					str[strI++] = "bin/" + readStr(line, index) + ".exe";
 					
 					sections.back().addButton(vec2(num[0], num[1]), vec2(num[2], num[3]), &style, str[0], &font, str[1], num[4]);
 					
@@ -572,7 +572,7 @@ namespace UIx1
 					num[numI++] = readInt(line, index);
 					str[strI++] = readStr(line, index);
 					num[numI++] = readInt(line, index);
-					str[strI++] = readStr(line, index);
+					str[strI++] = "bin/" + readStr(line, index) + ".exe";
 					
 					sections.back().addToggle(vec2(num[0], num[1]), vec2(num[2], num[3]), &style, str[0], &font, str[1], num[4]);
 					
