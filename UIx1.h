@@ -176,11 +176,11 @@ namespace UIx1
 			exec = pExec;
 		}
 
-		void hoverColor(bool pHover)
+		virtual void hoverColor(bool pHover)
 		{
 			setColor(color);
 			if (pHover)
-				rect.setColor(color.back + sf::Color(0x3F3F3FFF));
+				rect.setColor(color.back + sf::Color(0x1F1F1FFF));
 		}
 
 		bool startProc(std::string pExec, std::string pArgs = "", int pTimeout = INFINITE)
@@ -258,6 +258,20 @@ namespace UIx1
 			rect.setColor(state ? color.front : color.back);
 		}
 
+		void hoverColor(bool pHover)
+		{
+			setColor(color);
+			if (pHover)
+				rect.setColor((state ? color.front : color.back) + sf::Color(0x1F1F1FFF));
+		}
+
+		void setColor(Color pColor)
+		{
+			color = pColor;
+			rect.setColor(state ? color.front : color.back);
+			text.setFillColor(color.text);
+		}
+
 	private:
 		void draw(sf::RenderTarget& target, sf::RenderStates states) const
 		{
@@ -320,8 +334,16 @@ namespace UIx1
 		void hoverCheck(sf::Vector2i& pMousePos, bool pClick)
 		{
 			for (auto& input : inputs)
-				if (input->hoverCheck(pMousePos) && pClick)
-					input->click();
+			{
+				if (input->hoverCheck(pMousePos))
+				{
+					input->hoverColor(true);
+					if (pClick)
+						input->click();
+				}
+				else
+					input->hoverColor(false);
+			}
 		}
 
 		void addButton(vec2 pPos, vec2 pSize, Style* pStylePtr, 

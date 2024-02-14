@@ -38,7 +38,7 @@
 
 C, 2F373F, 1F272F, FFFFFF
 S, 0, 0, 9, 2, "Customization", 30
-	C, 2F373F, 171F27, FFFFFF
+	C, 474F57, 171F27, FFFFFF
 	B, 0, 0, 3, 2, " Change`Wallpaper", 15, "ChWall"
 	B, 3, 0, 3, 2, " Reload`Wallpaper", 15, "RlWall"
 	T, 6, 0, 3, 2, " Show`Seconds", 15, "ShowSec"
@@ -47,7 +47,7 @@ C, 2F373F, 1F272F, FFFFFF
 S, 0, 3, 9, 2, "Programs", 30
 	# HKCU\Environment\UserInitMprLogonScript
 	# C, 2F373F, 171F27, FFFFFF
-	C, FF0000, FF0000, FFFFFF
+	C, 7F0000, 7F0000, FFFFFF
 	B, 0, 0, 3, 2, "Add Startup`  Program", 15, "AutoStart" 
 	B, 3, 0, 3, 2, "Add Program`to App List", 15, "AddProgList"
 	B, 6, 0, 3, 2, "Universal`Extractor", 15, "UniExtract"
@@ -55,26 +55,26 @@ S, 0, 3, 9, 2, "Programs", 30
 C, 2F373F, 1F272F, FFFFFF
 S, 0, 6, 9, 2, "Hotkeys", 30
 	# C, 2F373F, 171F27, FFFFFF
-	C, FF0000, FF0000, FFFFFF
+	C, 7F0000, 7F0000, FFFFFF
 	T, 0, 0, 3, 2, " Pin Window`(Ctrl+Win+T)", 15, "PinWinHK"
 	T, 3, 0, 3, 2, "Process Explorer`(Ctrl+Shift+Esc)", 14, "ProcExpHK"
 	T, 6, 0, 3, 2, " Powershell`(Ctrl+Alt+T)", 15, "PwshHK"
 
 C, 2F373F, 1F272F, FFFFFF
-S, 9, 0, 6, 2, "About", 30
-	C, 2F373F, 171F27, FFFFFF
-	X, 0, 0, 6, 2, "Test", 15
-
-C, 2F373F, 1F272F, FFFFFF
-S, 9, 3, 6, 2, "Edit Layout", 30
+S, 9, 0, 6, 2, "Edit Layout", 30
 	# C, 2F373F, 171F27, FFFFFF
-	C, FF0000, FF0000, FFFFFF
+	C, 7F0000, 7F0000, FFFFFF
 	B, 0, 0, 3, 2, "Edit Layout", 15, "EditUI"
 	B, 3, 0, 3, 2, "Reset Layout", 15, "ResetUI"
 
 C, 2F373F, 1F272F, FFFFFF
-S, 9, 6, 6, 2, "Source Code", 30
-	# C, 2F373F, 171F27, FFFFFF
-	C, FF0000, FF0000, FFFFFF
+S, 9, 3, 6, 2, "Source Code", 30
+	C, 2F373F, 171F27, FFFFFF
 	B, 0, 0, 3, 2, "Source Code", 15, "OpenSource"
-	B, 3, 0, 3, 2, "Updates", 15, "OpenUpdates"
+	B, 3, 0, 3, 2, "Latest Release", 15, "LastRel"
+
+
+C, 2F373F, 1F272F, FFFFFF
+S, 9, 6, 6, 2, "About", 30
+	C, 2F373F, 171F27, FFFFFF
+	X, 0, 0, 6, 2, "Test", 15
