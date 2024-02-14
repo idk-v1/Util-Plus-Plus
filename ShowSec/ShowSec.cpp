@@ -4,32 +4,35 @@
 #include <winbase.h>
 #include <string>
 
-void toggleSeconds()
+int main(int argc, char* argv[])
 {
-	DWORD showSec = 0, null;
-	const wchar_t* key = L"SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced";
-	const wchar_t* value = L"ShowSecondsInSystemClock";
-
-	RegGetValueW(HKEY_CURRENT_USER, key, value, RRF_RT_DWORD, NULL, &showSec, &null);
-	showSec = !showSec;
-	RegSetKeyValueW(HKEY_CURRENT_USER, key, value, REG_DWORD, &showSec, sizeof DWORD);
-
-    HANDLE hSnapShot = CreateToolhelp32Snapshot(TH32CS_SNAPALL, NULL);
-    PROCESSENTRY32W pEntry;
-    pEntry.dwSize = sizeof(pEntry);
-    BOOL hRes = Process32FirstW(hSnapShot, &pEntry);
-    while (hRes)
+    if (argc == 2)
     {
-        if (std::wstring(pEntry.szExeFile) == std::wstring(L"explorer.exe"))
+        DWORD showSec = argv[1][0] - '0', null;
+        const wchar_t* key = L"SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced";
+        const wchar_t* value = L"ShowSecondsInSystemClock";
+
+        RegSetKeyValueW(HKEY_CURRENT_USER, key, value, REG_DWORD, &showSec, sizeof DWORD);
+
+        HANDLE hSnapShot = CreateToolhelp32Snapshot(TH32CS_SNAPALL, NULL);
+        PROCESSENTRY32W pEntry;
+        pEntry.dwSize = sizeof(pEntry);
+        BOOL hRes = Process32FirstW(hSnapShot, &pEntry);
+        while (hRes)
         {
-            HANDLE hProcess = OpenProcess(PROCESS_TERMINATE, 0, pEntry.th32ProcessID);
-            if (hProcess)
+            if (std::wstring(pEntry.szExeFile) == std::wstring(L"explorer.exe"))
             {
-                TerminateProcess(hProcess, 9);
-                CloseHandle(hProcess);
+                HANDLE hProcess = OpenProcess(PROCESS_TERMINATE, 0, pEntry.th32ProcessID);
+                if (hProcess)
+                {
+                    TerminateProcess(hProcess, 9);
+                    CloseHandle(hProcess);
+                }
             }
+            hRes = Process32NextW(hSnapShot, &pEntry);
         }
-        hRes = Process32NextW(hSnapShot, &pEntry);
+        CloseHandle(hSnapShot);
     }
-    CloseHandle(hSnapShot);
+
+    return 0;
 }

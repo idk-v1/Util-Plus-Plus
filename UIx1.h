@@ -119,7 +119,8 @@ namespace UIx1
 	{
 	public:
 		Input() {}
-		Input(vec2 pPos, vec2 pSize, Style* pStylePtr, std::string pLabelStr, sf::Font* pFontPtr, int pFontSize)
+		Input(vec2 pPos, vec2 pSize, Style* pStylePtr, std::string pLabelStr, 
+			sf::Font* pFontPtr, int pFontSize, Color pColor)
 		{
 			pos = pPos;
 			size = pSize;
@@ -169,7 +170,8 @@ namespace UIx1
 	public:
 		ExecInput() {}
 		ExecInput(vec2 pPos, vec2 pSize, Style* pStylePtr, std::string pLabelStr,
-			sf::Font* pFontPtr, std::string pExec, int pFontSize) : Input(pPos, pSize, pStylePtr, pLabelStr, pFontPtr, pFontSize)
+			sf::Font* pFontPtr, std::string pExec, int pFontSize, Color pColor) :
+			Input(pPos, pSize, pStylePtr, pLabelStr, pFontPtr, pFontSize, pColor)
 		{
 			exec = pExec;
 		}
@@ -186,7 +188,10 @@ namespace UIx1
 			unsigned long exit, status;
 			STARTUPINFOA info = { sizeof(info) };
 			PROCESS_INFORMATION processInfo;
-			if (CreateProcessA(pExec.data(), LPSTR(pArgs.data()), NULL, NULL, TRUE, 0, NULL, NULL, &info, &processInfo))
+
+			pArgs.insert(0, " ");
+
+			if (CreateProcessA(pExec.data(), &pArgs[0], NULL, NULL, TRUE, 0, NULL, NULL, &info, &processInfo))
 			{
 				WaitForSingleObject(processInfo.hProcess, pTimeout);
 				status = GetExitCodeProcess(processInfo.hProcess, &exit);
@@ -210,13 +215,16 @@ namespace UIx1
 	public:
 		Button() {}
 		Button(vec2 pPos, vec2 pSize, Style* pStylePtr, std::string pLabelStr,
-			sf::Font* pFontPtr, std::string pExec, int pFontSize) :
+			sf::Font* pFontPtr, std::string pExec, int pFontSize, Color pColor) :
 			ExecInput(pPos, pSize, pStylePtr, pLabelStr,
-				pFontPtr, pExec, pFontSize) {}
+				pFontPtr, pExec, pFontSize, pColor)
+		{
+			setColor(pColor);
+		}
 
 		void click()
 		{
-			startProc(exec);
+			startProc("bin/" + exec + ".exe");
 		}
 
 	private:
@@ -232,13 +240,22 @@ namespace UIx1
 	public:
 		Toggle() {}
 		Toggle(vec2 pPos, vec2 pSize, Style* pStylePtr, std::string pLabelStr,
-			sf::Font* pFontPtr, std::string pExec, int pFontSize) :
+			sf::Font* pFontPtr, std::string pExec, int pFontSize, Color pColor) :
 			ExecInput(pPos, pSize, pStylePtr, pLabelStr,
-				pFontPtr, pExec, pFontSize) {}
+				pFontPtr, pExec, pFontSize, pColor)
+		{
+			setColor(pColor);
+			state = startProc("bin/Q_" + exec + ".exe");
+
+			rect.setColor(state ? color.front : color.back);
+		}
 
 		void click()
 		{
-			startProc(exec, std::to_string(startProc("Q_" + exec)));
+			state = !startProc("bin/Q_" + exec + ".exe");
+			startProc("bin/" + exec + ".exe", std::to_string(state));
+
+			rect.setColor(state ? color.front : color.back);
 		}
 
 	private:
@@ -247,6 +264,8 @@ namespace UIx1
 			target.draw(rect, states);
 			target.draw(text, states);
 		}
+
+		bool state = false;
 	};
 
 	class Textbox : public Input
@@ -254,8 +273,10 @@ namespace UIx1
 	public:
 		Textbox() {}
 		Textbox(vec2 pPos, vec2 pSize, Style* pStylePtr, std::string pLabelStr, 
-			sf::Font* pFontPtr, int pFontSize) : Input(pPos, pSize, pStylePtr, pLabelStr, pFontPtr, pFontSize)
+			sf::Font* pFontPtr, int pFontSize, Color pColor) : 
+			Input(pPos, pSize, pStylePtr, pLabelStr, pFontPtr, pFontSize, pColor)
 		{
+			setColor(pColor);
 		}
 
 	private:
@@ -307,24 +328,21 @@ namespace UIx1
 			std::string str, sf::Font* pFontPtr, std::string pExec, int pFontSize)
 		{
 			inputs.push_back(new Button(vec2(pPos.x + pos.x, pPos.y + pos.y + 1), 
-				pSize, pStylePtr, str, pFontPtr, pExec, pFontSize));
-			inputs.back()->setColor(*colorPtr);
+				pSize, pStylePtr, str, pFontPtr, pExec, pFontSize, *colorPtr));
 		}
 
 		void addToggle(vec2 pPos, vec2 pSize, Style* pStylePtr,
 			std::string str, sf::Font* pFontPtr, std::string pExec, int pFontSize)
 		{
 			inputs.push_back(new Toggle(vec2(pPos.x + pos.x, pPos.y + pos.y + 1), 
-				pSize, pStylePtr, str, pFontPtr, pExec, pFontSize));
-			inputs.back()->setColor(*colorPtr);
+				pSize, pStylePtr, str, pFontPtr, pExec, pFontSize, *colorPtr));
 		}
 
 		void addTextbox(vec2 pPos, vec2 pSize, Style* pStylePtr,
 			std::string str, sf::Font* pFontPtr, int pFontSize)
 		{
 			inputs.push_back(new Textbox(vec2(pPos.x + pos.x, pPos.y + pos.y + 1),
-				pSize, pStylePtr, str, pFontPtr, pFontSize));
-			inputs.back()->setColor(*colorPtr);
+				pSize, pStylePtr, str, pFontPtr, pFontSize, *colorPtr));
 		}
 
 		Input* getInput(int pIndex)
@@ -559,7 +577,7 @@ namespace UIx1
 					num[numI++] = readInt(line, index);
 					str[strI++] = readStr(line, index);
 					num[numI++] = readInt(line, index);
-					str[strI++] = "bin/" + readStr(line, index) + ".exe";
+					str[strI++] = readStr(line, index);
 					
 					sections.back().addButton(vec2(num[0], num[1]), vec2(num[2], num[3]), &style, str[0], &font, str[1], num[4]);
 					
@@ -572,7 +590,7 @@ namespace UIx1
 					num[numI++] = readInt(line, index);
 					str[strI++] = readStr(line, index);
 					num[numI++] = readInt(line, index);
-					str[strI++] = "bin/" + readStr(line, index) + ".exe";
+					str[strI++] = readStr(line, index);
 					
 					sections.back().addToggle(vec2(num[0], num[1]), vec2(num[2], num[3]), &style, str[0], &font, str[1], num[4]);
 					
