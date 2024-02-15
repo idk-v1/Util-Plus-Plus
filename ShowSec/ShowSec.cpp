@@ -4,11 +4,11 @@
 #include <winbase.h>
 #include <string>
 
-int main(int argc, char* argv[])
+int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pCmdLine, int nCmdShow)
 {
-    if (argc == 2)
+    if (__argc == 2)
     {
-        DWORD showSec = argv[1][0] - '0', null;
+        DWORD showSec = (__argv[1][0] - '0');
         const wchar_t* key = L"SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced";
         const wchar_t* value = L"ShowSecondsInSystemClock";
 

@@ -1,7 +1,8 @@
 #include "UIx1.h"
 
 
-int main()
+//int main()
+int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdShow)
 {
 	sf::Vector2u winSize;
 	UIx1::UI ui(".ui", &winSize);

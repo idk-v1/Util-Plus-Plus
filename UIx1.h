@@ -198,8 +198,11 @@ namespace UIx1
 				CloseHandle(processInfo.hProcess);
 				CloseHandle(processInfo.hThread);
 
+				printf("exit %d\n", exit);
 				if (status != STILL_ACTIVE && status)
 					return exit;
+				else
+					printf("taking a while\n");
 			}
 			else
 				printf("Failed to start \"%s\"\n", pExec.data());
@@ -246,7 +249,6 @@ namespace UIx1
 		{
 			setColor(pColor);
 			state = startProc("bin/Q_" + exec + ".exe");
-
 			rect.setColor(state ? color.front : color.back);
 		}
 
@@ -467,7 +469,7 @@ namespace UIx1
 			bool click = sf::Mouse::isButtonPressed(sf::Mouse::Left);
 			sf::Vector2i mousePos = sf::Mouse::getPosition(pWin);
 			for (auto& sec : sections)
-				sec.hoverCheck(mousePos, click && !clickLast);
+				sec.hoverCheck(mousePos, click && !clickLast && pWin.hasFocus());
 			clickLast = click;
 		}
 

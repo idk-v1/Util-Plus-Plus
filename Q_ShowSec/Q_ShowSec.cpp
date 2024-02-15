@@ -1,12 +1,13 @@
 #include <Windows.h>
 #include <string>
 
-int main()
+int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pCmdLine, int nCmdShow)
 {
-    DWORD showSec = 0, null;
-    const wchar_t* key = L"SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced";
-    const wchar_t* value = L"ShowSecondsInSystemClock";
+    unsigned long long showSec;
+    unsigned long null;
+    const char* key = "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced";
+    const char* value = "ShowSecondsInSystemClock";
 
-    RegGetValueW(HKEY_CURRENT_USER, key, value, RRF_RT_DWORD, NULL, &showSec, &null);
+    RegGetValueA(HKEY_CURRENT_USER, key, value, RRF_RT_ANY, NULL, &showSec, &null);
     return showSec;
 }

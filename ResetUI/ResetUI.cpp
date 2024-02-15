@@ -4,7 +4,7 @@
 #include <tlhelp32.h>
 #include <Psapi.h>
 
-int main()
+int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdShow)
 {
 	std::ifstream src("default.ui");
 	std::ofstream dst(".ui");
