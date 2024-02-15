@@ -7,6 +7,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
 	UIx1::UI ui(".ui", &winSize);
 
 	sf::RenderWindow win(sf::VideoMode(winSize.x, winSize.y), "Maybe helpful things... IDK", sf::Style::Close);
+	win.setFramerateLimit(20);
 	while (win.isOpen())
 	{
 		sf::Event e;
