@@ -15,7 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="AddAutoStart.cpp">
+    <ClCompile Include="Q_EnableStartup.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

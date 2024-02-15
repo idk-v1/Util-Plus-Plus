@@ -45,12 +45,11 @@ S, 0, 0, 9, 2, "Customization", 30
 
 C, 2F373F, 1F272F, FFFFFF
 S, 0, 3, 9, 2, "Programs", 30
-	# HKCU\Environment\UserInitMprLogonScript
-	# C, 2F373F, 171F27, FFFFFF
+	C, 2F373F, 171F27, FFFFFF
+	B, 0, 0, 3, 2, "Edit Startup`  Programs", 15, "Startup" 
+	B, 3, 0, 3, 2, "Run Startup`  Programs", 15, "StartupRunner"
 	C, 7F0000, 7F0000, FFFFFF
-	B, 0, 0, 3, 2, "Edit Startup`  Programs", 15, "AutoStart" 
-	B, 3, 0, 3, 2, "Add Program to`  Start List", 15, "AddProgList"
-	T, 6, 0, 3, 2, "Lockdown` Pause", 15, "LDPause"
+	B, 6, 0, 3, 2, "Add Program to`  Start List", 15, "AddProgList"
 
 C, 2F373F, 1F272F, FFFFFF
 S, 0, 6, 9, 2, "Hotkeys", 30

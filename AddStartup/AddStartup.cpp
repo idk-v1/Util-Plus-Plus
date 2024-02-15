@@ -84,7 +84,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pCmdLine, 
 			STARTUPINFOA info = { sizeof(info) };
 			PROCESS_INFORMATION processInfo;
 
-			if (CreateProcessA("bin/AutoStart.exe", NULL, NULL, NULL, TRUE, 0, NULL, NULL, &info, &processInfo))
+			if (CreateProcessA("bin/Startup.exe", NULL, NULL, NULL, TRUE, 0, NULL, NULL, &info, &processInfo))
 			{
 				CloseHandle(processInfo.hProcess);
 				CloseHandle(processInfo.hThread);
