@@ -1,7 +1,6 @@
 #include "UIx1.h"
 
 
-//int main()
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdShow)
 {
 	sf::Vector2u winSize;
