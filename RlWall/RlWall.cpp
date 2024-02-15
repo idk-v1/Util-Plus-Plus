@@ -1,12 +1,12 @@
 #include <fstream>
 #include <Windows.h>
 
-int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdShow)
+int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pCmdLine, int nCmdShow)
 {
 	std::ifstream src;
 	std::ofstream dst;
 
-	src.open(L"C:/wallpaper/wallpaper.jpg", std::ios::binary);
+	src.open(L"data/wallpaper.jpg", std::ios::binary);
 	if (src.is_open())
 	{
 		SetFileAttributes(L"C:/cps/wallpaper.jpg", 0);

@@ -1,13 +1,16 @@
 #include <fstream>
 #include <Windows.h>
 
-int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdShow)
+int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pCmdLine, int nCmdShow)
 {
 	std::ifstream src;
 	std::ofstream dst;
 
 	OPENFILENAME ofn;
-	wchar_t szFile[260];
+	wchar_t szFile[MAX_PATH];
+
+	wchar_t currentDir[MAX_PATH];
+	GetCurrentDirectory(MAX_PATH, currentDir);
 
 	ZeroMemory(&ofn, sizeof(ofn));
 	ofn.lStructSize = sizeof(ofn);
@@ -27,19 +30,20 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
 		src.open(ofn.lpstrFile, std::ios::binary);
 		if (src.is_open())
 		{
-			_wmkdir(L"C:/wallpaper");
-			dst.open(L"C:/wallpaper/wallpaper.jpg", std::ios::binary);
+			SetCurrentDirectory(currentDir);
+			CreateDirectory(L"data", 0);
+			dst.open("data/wallpaper.jpg", std::ios::binary);
 			dst << src.rdbuf();
 			dst.close();
 
 			src.seekg(0);
-			SetFileAttributes(L"C:/cps/wallpaper.jpg", 0);
-			dst.open(L"C:/cps/wallpaper.jpg", std::ios::binary);
+			SetFileAttributesA("C:/cps/wallpaper.jpg", 0);
+			dst.open("C:/cps/wallpaper.jpg", std::ios::binary);
 			dst << src.rdbuf();
 			dst.close();
 
 			src.close();
-			SystemParametersInfoW(SPI_SETDESKWALLPAPER, 0, (LPWSTR)L"", SPIF_UPDATEINIFILE);
+			SystemParametersInfoW(SPI_SETDESKWALLPAPER, 0, NULL, SPIF_UPDATEINIFILE);
 		}
 	}
 

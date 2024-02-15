@@ -1,10 +1,10 @@
-#include "UIx1.h"
+#include "../UIx1.h"
 
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pCmdLine, int nCmdShow)
 {
 	sf::Vector2u winSize;
-	UIx1::UI ui("res/.ui", &winSize);
+	UIx1::UI ui(".ui", &winSize);
 
 	sf::RenderWindow win(sf::VideoMode(winSize.x, winSize.y), "Maybe helpful things... IDK", sf::Style::Close);
 	win.setFramerateLimit(20);

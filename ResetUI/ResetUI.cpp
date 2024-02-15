@@ -4,10 +4,10 @@
 #include <tlhelp32.h>
 #include <Psapi.h>
 
-int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdShow)
+int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pCmdLine, int nCmdShow)
 {
-	std::ifstream src("default.ui");
-	std::ofstream dst(".ui");
+	std::ifstream src("res/default.ui");
+	std::ofstream dst("res/.ui");
 
 	if (src.is_open())
 	{
