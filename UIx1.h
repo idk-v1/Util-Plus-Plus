@@ -198,7 +198,7 @@ namespace UIx1
 				rect.setColor(color.back + hiColor);
 		}
 
-		bool startProc(std::string pExec, std::string pArgs = "")
+		bool startProc(std::string pExec, int pTimeout, std::string pArgs = "")
 		{
 			unsigned long exit, status;
 			STARTUPINFOA info = { sizeof(info) };
@@ -209,7 +209,7 @@ namespace UIx1
 			if (CreateProcessA(pExec.data(), &pArgs[0], NULL, NULL, TRUE, 0, 
 				NULL, NULL, &info, &processInfo))
 			{
-				WaitForSingleObject(processInfo.hProcess, INFINITE);
+				WaitForSingleObject(processInfo.hProcess, pTimeout);
 				status = GetExitCodeProcess(processInfo.hProcess, &exit);
 				CloseHandle(processInfo.hProcess);
 				CloseHandle(processInfo.hThread);
@@ -236,7 +236,7 @@ namespace UIx1
 
 		void click()
 		{
-			startProc("bin/" + exec + ".exe");
+			startProc("bin/" + exec + ".exe", 0);
 		}
 
 	private:
@@ -257,14 +257,14 @@ namespace UIx1
 			ExecInput(pPos, pSize, pStylePtr, 
 				pLabelStr, pFontPtr, pExec, pFontSize, pColor)
 		{
-			state = startProc("bin/Q_" + exec + ".exe");
+			state = startProc("bin/Q_" + exec + ".exe", INFINITE);
 			rect.setColor(state ? color.front : color.back);
 		}
 
 		void click()
 		{
-			state = !startProc("bin/Q_" + exec + ".exe");
-			startProc("bin/" + exec + ".exe", std::to_string(state));
+			state = !startProc("bin/Q_" + exec + ".exe", INFINITE);
+			startProc("bin/" + exec + ".exe", INFINITE, std::to_string(state));
 
 			rect.setColor(state ? color.front : color.back);
 		}

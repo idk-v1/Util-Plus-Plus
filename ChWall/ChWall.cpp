@@ -1,5 +1,6 @@
 #include <fstream>
 #include <Windows.h>
+#include <string>
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pCmdLine, int nCmdShow)
 {
@@ -44,6 +45,28 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pCmdLine, 
 
 			src.close();
 			SystemParametersInfoW(SPI_SETDESKWALLPAPER, 0, NULL, SPIF_UPDATEINIFILE);
+
+			CreateDirectoryA("data", 0);
+			src.open("data/.autostart");
+			bool exists = false;
+			std::wstring wstr(currentDir);
+			std::string data, binPath = std::string(wstr.begin(), wstr.end()) + "\\bin\\RlWall.exe";
+			while (std::getline(src, data))
+			{
+				if (binPath == data)
+				{
+					exists == true;
+					break;
+				}
+			}
+			src.close();
+
+			if (!exists)
+			{
+				dst.open("data/.autostart", std::ios::app);
+				dst << binPath << '\n';
+				dst.close();
+			}
 		}
 	}
 

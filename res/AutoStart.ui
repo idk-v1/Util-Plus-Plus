@@ -1,0 +1,7 @@
+?, 300, 600, 50, 20, 4, "res/SourceCodePro.ttf"
+
+C, 2F373F, 1F272F, FFFFFF
+S, 0, 0, 6, 11, "Startup", 30
+	C, 474F57, 171F27, FFFFFF
+	B, 0, 0, 3, 1, "Add New", 15, "AddAutoStart"
+	T, 3, 0, 3, 1, "Enable", 15, "EnableAutoStart"

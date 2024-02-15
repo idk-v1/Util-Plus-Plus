@@ -23,6 +23,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ResetUI", "ResetUI\ResetUI.
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AutoStart", "AutoStart\AutoStart.vcxproj", "{B401B07C-14A4-41D0-B287-534F99862A0D}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AddAutoStart", "AddAutoStart\AddAutoStart.vcxproj", "{4FF43F05-68A7-41AC-AC64-5848CA485735}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -111,6 +113,14 @@ Global
 		{B401B07C-14A4-41D0-B287-534F99862A0D}.Release|x64.Build.0 = Release|x64
 		{B401B07C-14A4-41D0-B287-534F99862A0D}.Release|x86.ActiveCfg = Release|Win32
 		{B401B07C-14A4-41D0-B287-534F99862A0D}.Release|x86.Build.0 = Release|Win32
+		{4FF43F05-68A7-41AC-AC64-5848CA485735}.Debug|x64.ActiveCfg = Debug|x64
+		{4FF43F05-68A7-41AC-AC64-5848CA485735}.Debug|x64.Build.0 = Debug|x64
+		{4FF43F05-68A7-41AC-AC64-5848CA485735}.Debug|x86.ActiveCfg = Debug|Win32
+		{4FF43F05-68A7-41AC-AC64-5848CA485735}.Debug|x86.Build.0 = Debug|Win32
+		{4FF43F05-68A7-41AC-AC64-5848CA485735}.Release|x64.ActiveCfg = Release|x64
+		{4FF43F05-68A7-41AC-AC64-5848CA485735}.Release|x64.Build.0 = Release|x64
+		{4FF43F05-68A7-41AC-AC64-5848CA485735}.Release|x86.ActiveCfg = Release|Win32
+		{4FF43F05-68A7-41AC-AC64-5848CA485735}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
