@@ -1,13 +1,6 @@
-#include <Windows.h>
-#include <string>
+#include "../Registry.h"
 
-int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pCmdLine, int nCmdShow)
+int main()
 {
-    unsigned long long showSec;
-    unsigned long null;
-    const char* key = "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced";
-    const char* value = "ShowSecondsInSystemClock";
-
-    RegGetValueA(HKEY_CURRENT_USER, key, value, RRF_RT_ANY, NULL, &showSec, &null);
-    return showSec;
+    return RegGetDWORD("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced", "ShowSecondsInSystemClock");
 }

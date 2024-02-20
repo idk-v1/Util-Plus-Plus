@@ -1,7 +1,7 @@
 #include <fstream>
 #include <Windows.h>
 
-int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pCmdLine, int nCmdShow)
+int main()
 {
 	std::ifstream src;
 	std::ofstream dst;
@@ -9,7 +9,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pCmdLine, 
 	src.open(L"data/wallpaper.jpg", std::ios::binary);
 	if (src.is_open())
 	{
-		SetFileAttributes(L"C:/cps/wallpaper.jpg", 0);
+		// set cps wallpaper to writable
+		SetFileAttributesA("C:/cps/wallpaper.jpg", 0);
 		dst.open(L"C:/cps/wallpaper.jpg", std::ios::binary);
 		dst << src.rdbuf();
 		dst.close();

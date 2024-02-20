@@ -3,7 +3,7 @@
 #include <Windows.h>
 
 
-int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pCmdLine, int nCmdShow)
+int main()
 {
 	std::ifstream list("data/.autostart");
 	std::string data;

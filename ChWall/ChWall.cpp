@@ -1,66 +1,49 @@
+#include "../File.h"
 #include <fstream>
-#include <Windows.h>
-#include <string>
 
-int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pCmdLine, int nCmdShow)
+int main()
 {
 	std::ifstream src;
 	std::ofstream dst;
+	std::string file;
 
-	OPENFILENAME ofn;
-	wchar_t szFile[MAX_PATH];
-
-	wchar_t currentDir[MAX_PATH];
-	GetCurrentDirectory(MAX_PATH, currentDir);
-
-	ZeroMemory(&ofn, sizeof(ofn));
-	ofn.lStructSize = sizeof(ofn);
-	ofn.hwndOwner = NULL;
-	ofn.lpstrFile = szFile;
-	ofn.lpstrFile[0] = 0;
-	ofn.nMaxFile = sizeof(szFile);
-	ofn.lpstrFilter = L"Images\0*.*\0";
-	ofn.nFilterIndex = 1;
-	ofn.lpstrFileTitle = NULL;
-	ofn.nMaxFileTitle = 0;
-	ofn.lpstrInitialDir = NULL;
-	ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
-
-	if (GetOpenFileName(&ofn))
+	if (pickFile(file))
 	{
-		src.open(ofn.lpstrFile, std::ios::binary);
+		src.open(file, std::ios::binary);
 		if (src.is_open())
 		{
-			SetCurrentDirectory(currentDir);
-			CreateDirectory(L"data", 0);
+			// store wallpaper to copy in dat folder
+			mkDir("data");
 			dst.open("data/wallpaper.jpg", std::ios::binary);
 			dst << src.rdbuf();
 			dst.close();
 
+			// set cps wallpaper to writable and overwrite it
 			src.seekg(0);
 			SetFileAttributesA("C:/cps/wallpaper.jpg", 0);
 			dst.open("C:/cps/wallpaper.jpg", std::ios::binary);
 			dst << src.rdbuf();
 			dst.close();
-
 			src.close();
+
+			// reload wallpaper
 			SystemParametersInfoW(SPI_SETDESKWALLPAPER, 0, NULL, SPIF_UPDATEINIFILE);
 
-			CreateDirectoryA("data", 0);
+			// check if autostart already has wallpaper reloader
 			src.open("data/.autostart");
 			bool exists = false;
-			std::wstring wstr(currentDir);
-			std::string data, binPath = std::string(wstr.begin(), wstr.end()) + "\\bin\\RlWall.exe";
+			std::string data, binPath = getCurrentDir() + "\\bin\\RlWall.exe";
 			while (std::getline(src, data))
 			{
 				if (binPath == data)
 				{
-					exists == true;
+					exists = true;
 					break;
 				}
 			}
 			src.close();
 
+			// set wallpaper reloader to autostart if it doesn't already
 			if (!exists)
 			{
 				dst.open("data/.autostart", std::ios::app);

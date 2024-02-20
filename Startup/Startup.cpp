@@ -1,7 +1,7 @@
 #include "../UIx1.h"
 
 
-int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pCmdLine, int nCmdShow)
+int main()
 {
 	sf::Vector2u winSize;
 	UIx1::UI ui("res/AutoStart.ui", &winSize);
