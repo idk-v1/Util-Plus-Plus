@@ -1,10 +1,13 @@
 #include <fstream>
 #include <string>
 #include <Windows.h>
+#include "../File.h"
 
 
 int main()
 {
+	setCurrentDir(getProgDir() + "\\..\\");
+
 	std::ifstream list("data/.autostart");
 	std::string data;
 
@@ -14,6 +17,7 @@ int main()
 			ShellExecuteA(0, 0, data.data(), 0, 0, SW_SHOW);
 
 		list.close();
+
 	}
 
 	return 0;

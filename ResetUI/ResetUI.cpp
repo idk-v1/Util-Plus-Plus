@@ -1,8 +1,11 @@
 #include <fstream>
 #include "../Process.h"
+#include "../File.h"
 
 int main()
 {
+	setCurrentDir(getProgDir() + "\\..\\");
+
 	std::ifstream src("res/default.ui");
 	std::ofstream dst("res/.ui");
 

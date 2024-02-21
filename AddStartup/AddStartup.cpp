@@ -10,6 +10,8 @@ int main()
 
 	if (pickFile(str))
 	{
+		setCurrentDir(getProgDir() + "\\..\\");
+
 		mkDir("data");
 
 		// checks autostart for duplicate

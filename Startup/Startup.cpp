@@ -1,10 +1,14 @@
 #include "../UIx1.h"
 #include "../Process.h"
+#include "../File.h"
 #include <fstream>
 #include <vector>
 
 int main()
 {
+	if (getCurrentDir() == getProgDir())
+		setCurrentDir("../");
+
 	sf::Vector2u winSize;
 	UIx1::UI ui("res/AutoStart.ui", &winSize);
 

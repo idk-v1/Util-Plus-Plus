@@ -9,6 +9,8 @@ int main()
 
 	if (pickFile(file))
 	{
+		setCurrentDir(getProgDir() + "\\..\\");
+
 		src.open(file, std::ios::binary);
 		if (src.is_open())
 		{

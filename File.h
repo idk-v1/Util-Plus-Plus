@@ -39,7 +39,21 @@ bool mkDir(std::string pName)
 
 std::string getCurrentDir()
 {
-	char currentDir[MAX_PATH];
-	GetCurrentDirectoryA(MAX_PATH, currentDir);
-	return std::string(currentDir);
+	char path[MAX_PATH];
+	GetCurrentDirectoryA(MAX_PATH, path);
+	return std::string(path);
+}
+
+void setCurrentDir(std::string pPath)
+{
+	SetCurrentDirectoryA(pPath.data());
+}
+
+std::string getProgDir()
+{
+	char path[MAX_PATH];
+	GetModuleFileNameA(NULL, path, MAX_PATH);
+	std::string str(path);
+	str.erase(str.find_last_of('\\'), std::string::npos);
+	return str;
 }

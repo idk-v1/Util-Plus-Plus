@@ -1,8 +1,12 @@
 #include <fstream>
 #include <Windows.h>
+#include "../File.h"
 
 int main()
 {
+	if (getCurrentDir() == getProgDir())
+		setCurrentDir(getProgDir() + "\\..\\");
+
 	std::ifstream src;
 	std::ofstream dst;
 

@@ -21,6 +21,9 @@
   <ItemGroup>
     <ClCompile Include="RlWall.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\File.h" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>

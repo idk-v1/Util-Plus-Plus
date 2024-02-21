@@ -148,6 +148,7 @@
     <ClCompile Include="ResetUI.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\File.h" />
     <ClInclude Include="..\Process.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -3,6 +3,8 @@
 
 int main()
 {
+    setCurrentDir(getProgDir() + "\\..\\");
+
     std::string str = RegGetStr("Environment", "UserInitMprLogonScript");
     std::string path = getCurrentDir() + "\\bin\\StartupRunner.exe";
        

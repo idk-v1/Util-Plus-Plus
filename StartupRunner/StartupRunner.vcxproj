@@ -139,6 +139,9 @@
   <ItemGroup>
     <ClCompile Include="StartupRunner.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\File.h" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
