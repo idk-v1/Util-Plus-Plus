@@ -22,9 +22,9 @@ int main()
 		ui.setColor(sf::Color(0x474F57FF), sf::Color(0x171F27FF), sf::Color(0xFFFFFFFF));
 		while (std::getline(listIn, data))
 		{
-			paths.push_back(data.substr(data.find_last_of('\\') + 1));
-			sec->addButton(UIx1::vec2f(0, count), UIx1::vec2f(6, 1), ui.getStylePtr(),
-				paths.back(), ui.getFontPtr(), "", 15);
+			paths.push_back(data);
+			sec->addButton(UIx1::vec2f(0, count++), UIx1::vec2f(6, 1), ui.getStylePtr(),
+				data.substr(data.find_last_of('\\') + 1), ui.getFontPtr(), "", 15);
 		}
 		listIn.close();
 	}
@@ -45,7 +45,7 @@ int main()
 				listOut.open("data/.autostart");
 				for (int ii = 0; ii < paths.size(); ii++)
 					if (ii != i)
-						listOut << paths[i] << '\n';
+						listOut << paths[ii] << '\n';
 				listOut.close();
 				win.close();
 				startProc("bin/Startup.exe");
