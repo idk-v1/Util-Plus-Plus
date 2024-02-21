@@ -162,7 +162,13 @@ namespace UIx1
 
 		bool hoverCheck(sf::Vector2i pMousePos)
 		{
+			changed = false;
 			return rect.getRect().contains(pMousePos);
+		}
+
+		bool hasChanged()
+		{
+			return changed;
 		}
 
 		virtual void hoverColor(bool pHover) {}
@@ -173,6 +179,7 @@ namespace UIx1
 		RoundedRect rect;
 		Color color;
 		sf::Text text;
+		bool changed = false;
 
 	private:
 		virtual void draw(sf::RenderTarget& target, 
@@ -236,7 +243,8 @@ namespace UIx1
 
 		void click()
 		{
-			startProc("bin/" + exec + ".exe", 0);
+			changed = true;
+			startProc(exec, 0);
 		}
 
 	private:
@@ -257,14 +265,27 @@ namespace UIx1
 			ExecInput(pPos, pSize, pStylePtr, 
 				pLabelStr, pFontPtr, pExec, pFontSize, pColor)
 		{
-			state = startProc("bin/Q_" + exec + ".exe", INFINITE);
+
+			qExec = exec;
+			for (auto& c : qExec)
+				if (c == '\\')
+					c = '/';
+
+			size_t slash = qExec.find_last_of('/');
+			if (slash != std::string::npos)
+				qExec.insert(slash + 1, "Q_");
+			else
+				qExec.insert(0, "Q_");
+
+			state = startProc(qExec, INFINITE);
 			rect.setColor(state ? color.front : color.back);
 		}
 
 		void click()
 		{
-			state = !startProc("bin/Q_" + exec + ".exe", INFINITE);
-			startProc("bin/" + exec + ".exe", INFINITE, std::to_string(state));
+			changed = true;
+			state = !startProc(qExec, INFINITE);
+			startProc(exec, INFINITE, std::to_string(state));
 
 			rect.setColor(state ? color.front : color.back);
 		}
@@ -290,6 +311,7 @@ namespace UIx1
 			target.draw(text, states);
 		}
 
+		std::string qExec;
 		bool state = false;
 	};
 
@@ -320,34 +342,36 @@ namespace UIx1
 			int pFontSize)
 		{
 			pos = pPos;
-			size = vec2f(pSize.x, pSize.y + 1);
+			size = vec2f(pSize.x, pSize.y);
 			st = pStylePtr;
 			colorPtr = pColorPtr;
-
-			labelStr = pLabelStr;
 			fontPtr = pFontPtr;
 
-			label.setFont(*fontPtr);
-			label.setCharacterSize(pFontSize);
-			label.setString(labelStr);
-			label.setPosition(
-				pos.x * st->scale + (size.x * st->scale - 
-					label.getLocalBounds().width) / 2.f, 
-				pos.y * st->scale + st->space);
+			if (!pLabelStr.empty())
+			{
+				labelStr = pLabelStr;
+				label.setFont(*fontPtr);
+				label.setCharacterSize(pFontSize);
+				label.setString(labelStr);
+				label.setPosition(
+					pos.x * st->scale + (size.x * st->scale -
+						label.getLocalBounds().width) / 2.f,
+					pos.y * st->scale + st->space);
 
-			labelRect = RoundedRect(pos, vec2f(size.x, 1), st);
+				labelRect = RoundedRect(pos, vec2f(size.x, 1), st);
+				labelRect.setColor(colorPtr->front);
+				label.setFillColor(colorPtr->text);
+			}
+
 			bodyRect = RoundedRect(pos, size, st);
-
-			labelRect.setColor(colorPtr->front);
 			bodyRect.setColor(colorPtr->back);
-			label.setFillColor(colorPtr->text);
 		}
 
-		void hoverCheck(sf::Vector2i& pMousePos, bool pClick)
+		void hoverCheck(sf::Vector2i& pMousePos, bool pFocus, bool pClick)
 		{
 			for (auto& input : inputs)
 			{
-				if (input->hoverCheck(pMousePos))
+				if (pFocus && input->hoverCheck(pMousePos))
 				{
 					input->hoverColor(true);
 					if (pClick)
@@ -363,7 +387,7 @@ namespace UIx1
 			int pFontSize)
 		{
 			inputs.push_back(new Button(
-				vec2f(pPos.x + pos.x, pPos.y + pos.y + 1), pSize, pStylePtr, 
+				vec2f(pPos.x + pos.x, pPos.y + pos.y), pSize, pStylePtr, 
 				str, pFontPtr, pExec, pFontSize, *colorPtr));
 		}
 
@@ -372,7 +396,7 @@ namespace UIx1
 			int pFontSize)
 		{
 			inputs.push_back(new Toggle(
-				vec2f(pPos.x + pos.x, pPos.y + pos.y + 1), pSize, pStylePtr, 
+				vec2f(pPos.x + pos.x, pPos.y + pos.y), pSize, pStylePtr, 
 				str, pFontPtr, pExec, pFontSize, *colorPtr));
 		}
 
@@ -380,7 +404,7 @@ namespace UIx1
 			std::string str, sf::Font* pFontPtr, int pFontSize)
 		{
 			inputs.push_back(new Textbox(
-				vec2f(pPos.x + pos.x, pPos.y + pos.y + 1), pSize, pStylePtr, 
+				vec2f(pPos.x + pos.x, pPos.y + pos.y), pSize, pStylePtr, 
 				str, pFontPtr, pFontSize, *colorPtr));
 		}
 
@@ -484,9 +508,25 @@ namespace UIx1
 			bool click = sf::Mouse::isButtonPressed(sf::Mouse::Left);
 			sf::Vector2i mousePos = sf::Mouse::getPosition(pWin);
 			for (auto& sec : sections)
-				sec.hoverCheck(mousePos, 
-					click && !clickLast && pWin.hasFocus());
+				sec.hoverCheck(mousePos, pWin.hasFocus(), click && !clickLast);
 			clickLast = click;
+		}
+
+		Style* getStylePtr()
+		{
+			return &style;
+		}
+
+		sf::Font* getFontPtr()
+		{
+			return &font;
+		}
+
+		void setColor(sf::Color pFront, sf::Color pBack, sf::Color pText)
+		{
+			color.front = pFront;
+			color.back = pBack;
+			color.text = pText;
 		}
 
 	private:
