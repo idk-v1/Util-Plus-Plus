@@ -47,8 +47,7 @@ C, 2F373F, 1F272F, FFFFFF
 S, 0, 3, 9, 3, "Programs", 30
 	C, 2F373F, 171F27, FFFFFF
 	B, 0, 1, 3, 2, "Edit Startup`  Programs", 15, "bin/Startup.exe" 
-	B, 3, 1, 3, 2, "Run Startup`  Programs", 15, "bin/StartupRunner.exe"
-	C, 7F0000, 7F0000, FFFFFF
+	B, 3, 1, 3, 2, "Remove Default` Taskbar Pins", 15, "bin/RmDefTaskbarPins.exe"
 	B, 6, 1, 3, 2, "Add Program to`  Start List", 15, "bin/AddProgList.exe"
 
 C, 2F373F, 1F272F, FFFFFF

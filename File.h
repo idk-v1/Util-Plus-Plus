@@ -1,5 +1,9 @@
 #include <Windows.h>
 #include <string>
+#include <ShObjIdl.h>
+#include <ShlGuid.h>
+
+#define MSG(str) (MessageBoxA(0, str, 0, 0))
 
 bool pickFile(std::string& pPath)
 {
@@ -30,6 +34,41 @@ bool pickFile(std::string& pPath)
 
 	SetCurrentDirectoryA(currentDir);
 	return false;
+}
+
+void CreateShortcut(std::string pSrc, std::string pDst)
+{
+	HRESULT hres;
+	IShellLinkA* psl;
+
+	CoInitialize(NULL);
+
+	hres = CoCreateInstance(CLSID_ShellLink, NULL, CLSCTX_INPROC_SERVER, IID_IShellLinkA, (LPVOID*)&psl);
+	if (SUCCEEDED(hres))
+	{
+		IPersistFile* ppf;
+
+		psl->SetPath(pSrc.data());
+		psl->SetIconLocation(pSrc.data(), 0);
+
+		// Save link
+		hres = psl->QueryInterface(IID_IPersistFile, (void**)&ppf);
+		if (SUCCEEDED(hres))
+		{
+			hres = ppf->Save(std::wstring(pDst.begin(), pDst.end()).data(), TRUE);
+			ppf->Release();
+		}
+
+		psl->Release();
+	}
+}
+
+std::string fileNameFromPath(std::string pPath)
+{
+	size_t pos = pPath.find_last_of('\\');
+	if (pos != std::string::npos)
+		return pPath.substr(pos + 1);
+	return pPath;
 }
 
 bool mkDir(std::string pName)
