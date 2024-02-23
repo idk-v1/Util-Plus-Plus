@@ -16,7 +16,6 @@ int main()
 	std::ifstream src;
 	std::ofstream dst;
 
-	// check if autostart already has wallpaper reloader
 	src.open("data/.autostart");
 	bool exists = false;
 	std::string data, binPath = getCurrentDir() + "\\bin\\RmDefTaskbarPins.exe";
@@ -30,7 +29,6 @@ int main()
 	}
 	src.close();
 
-	// set wallpaper reloader to autostart if it doesn't already
 	if (!exists)
 	{
 		dst.open("data/.autostart", std::ios::app);
