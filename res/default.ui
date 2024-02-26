@@ -42,7 +42,7 @@ S, 0, 0, 12, 3, "Customization", 30
 	B, 0, 1, 3, 2, " Change`Wallpaper", 15, "bin/ChWall.exe"
 	B, 3, 1, 3, 2, " Reload`Wallpaper", 15, "bin/RlWall.exe"
 	T, 6, 1, 3, 2, " Show`Seconds", 15, "bin/ShowSec.exe"
-	T, 9, 1, 3, 2, "Remove Admin` Shortcuts", 15, "bin/RmAdmSh.exe"
+	B, 9, 1, 3, 2, "Remove Admin` Shortcuts", 15, "bin/RmAdmSh.exe"
 
 C, 2F373F, 1F272F, FFFFFF
 S, 0, 3, 9, 3, "Programs", 30

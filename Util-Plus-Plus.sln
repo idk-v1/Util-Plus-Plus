@@ -45,6 +45,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LastRel", "Source Code\Last
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OpenSource", "Source Code\OpenSource\OpenSource.vcxproj", "{DED253AA-922E-42B0-8835-0CFEF61EAD11}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RmAdmSh", "Customization\RmAdmSh\RmAdmSh.vcxproj", "{867589F9-AA10-4E72-8200-07F9441901E2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -181,6 +183,14 @@ Global
 		{DED253AA-922E-42B0-8835-0CFEF61EAD11}.Release|x64.Build.0 = Release|x64
 		{DED253AA-922E-42B0-8835-0CFEF61EAD11}.Release|x86.ActiveCfg = Release|Win32
 		{DED253AA-922E-42B0-8835-0CFEF61EAD11}.Release|x86.Build.0 = Release|Win32
+		{867589F9-AA10-4E72-8200-07F9441901E2}.Debug|x64.ActiveCfg = Debug|x64
+		{867589F9-AA10-4E72-8200-07F9441901E2}.Debug|x64.Build.0 = Debug|x64
+		{867589F9-AA10-4E72-8200-07F9441901E2}.Debug|x86.ActiveCfg = Debug|Win32
+		{867589F9-AA10-4E72-8200-07F9441901E2}.Debug|x86.Build.0 = Debug|Win32
+		{867589F9-AA10-4E72-8200-07F9441901E2}.Release|x64.ActiveCfg = Release|x64
+		{867589F9-AA10-4E72-8200-07F9441901E2}.Release|x64.Build.0 = Release|x64
+		{867589F9-AA10-4E72-8200-07F9441901E2}.Release|x86.ActiveCfg = Release|Win32
+		{867589F9-AA10-4E72-8200-07F9441901E2}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -201,6 +211,7 @@ Global
 		{A3E6E2AE-114F-4567-AB56-2D7937F2432A} = {D27CEB08-6979-4E59-96A5-B2161D8DEAB0}
 		{2080B926-E537-4E18-81EF-B52C7EFEC351} = {A368AAD2-CF1D-4311-802F-010E42340934}
 		{DED253AA-922E-42B0-8835-0CFEF61EAD11} = {A368AAD2-CF1D-4311-802F-010E42340934}
+		{867589F9-AA10-4E72-8200-07F9441901E2} = {0158940A-87A2-4A25-949D-9D8DCFFCB834}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D529919B-47AA-4B37-9976-438BBB661367}
