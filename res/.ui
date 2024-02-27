@@ -34,34 +34,41 @@
 # Sets the colors of elements created after it.
 
 
-?, 600, 450, 50, 20, 4, "res/SourceCodePro.ttf"
+?, 600, 550, 50, 20, 4, "res/SourceCodePro.ttf"
 
 C, 2F373F, 1F272F, FFFFFF
-S, 0, 0, 12, 3, "Customization", 30
+S, 0, 0, 9, 5, "Customization", 30
 	C, 474F57, 171F27, FFFFFF
 	B, 0, 1, 3, 2, " Change`Wallpaper", 15, "bin/ChWall.exe"
 	B, 3, 1, 3, 2, " Reload`Wallpaper", 15, "bin/RlWall.exe"
 	T, 6, 1, 3, 2, " Show`Seconds", 15, "bin/ShowSec.exe"
-	B, 9, 1, 3, 2, "Remove Admin` Shortcuts", 15, "bin/RmAdmSh.exe"
+	B, 0, 3, 3, 2, "Remove Admin` Shortcuts", 15, "bin/RmAdmSh.exe"
+	B, 3, 3, 3, 2, "Remove Default` Taskbar Pins", 15, "bin/RmDefTaskbarPins.exe"
+	C, 7F0000, 7F0000, FFFFFF
+	T, 6, 3, 3, 2, "Show Battery`  Percent", 15, "bin/ShBattery.exe"
 
 C, 2F373F, 1F272F, FFFFFF
-S, 0, 3, 9, 3, "Programs", 30
+S, 0, 5, 9, 3, "Programs", 30
 	C, 2F373F, 171F27, FFFFFF
 	B, 0, 1, 3, 2, "Edit Startup`  Programs", 15, "bin/Startup.exe" 
-	B, 3, 1, 3, 2, "Remove Default` Taskbar Pins", 15, "bin/RmDefTaskbarPins.exe"
-	B, 6, 1, 3, 2, "Add Program to`  Start List", 15, "bin/AddProgList.exe"
+	B, 3, 1, 3, 2, "Add Program to`  Start List", 15, "bin/AddProgList.exe"
+	C, 7F0000, 7F0000, FFFFFF
+	B, 6, 1, 3, 2, "Restart w/out`   Update", 15, "bin/RstWOUpd.exe"
 
 C, 2F373F, 1F272F, FFFFFF
-S, 0, 6, 9, 3, "Hotkeys", 30
+S, 0, 8, 12, 3, "Hotkeys", 30
 	# C, 2F373F, 171F27, FFFFFF
 	C, 7F0000, 7F0000, FFFFFF
 	T, 0, 1, 3, 2, " Pin Window`(Ctrl+Win+T)", 15, "bin/PinWinHK.exe"
 	T, 3, 1, 3, 2, "Process Explorer`(Ctrl+Shift+Esc)", 14, "bin/ProcExpHK.exe"
 	T, 6, 1, 3, 2, " Powershell`(Ctrl+Alt+T)", 15, "bin/PwshHK.exe"
+	T, 9, 1, 3, 2, "Quick Launch`(Ctrl+Alt+U)", 15, "bin/UPPHK.exe"
 
 C, 2F373F, 1F272F, FFFFFF
-S, 9, 3, 3, 6, "", 0
-	C, 2F373F, 171F27, FFFFFF
+S, 9, 0, 3, 8, "", 0
+	C, 7F0000, 7F0000, FFFFFF
 	B, 0, 0, 3, 2, "Help", 20, "bin/Help.exe"
+	C, 2F373F, 171F27, FFFFFF
 	B, 0, 2, 3, 2, "Edit Layout", 15, "bin/EditUI.exe"
 	B, 0, 4, 3, 2, "Source Code", 15, "bin/OpenSource.exe"
+	B, 0, 6, 3, 2, "Latest Release", 15, "bin/LastRel.exe"
