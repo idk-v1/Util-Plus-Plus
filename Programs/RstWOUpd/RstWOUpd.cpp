@@ -19,7 +19,7 @@ int main()
         tp.Privileges[0].Attributes = SE_PRIVILEGE_ENABLED;
         AdjustTokenPrivileges(hToken, false, &tp, sizeof(tp), NULL, 0);
 
-        InitiateSystemShutdownA(NULL, NULL, 0, true, true);
+       //InitiateSystemShutdownA(NULL, NULL, 0, true, true);
 	}
 	return 0;
 }
