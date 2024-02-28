@@ -2,10 +2,11 @@
 #include <string>
 #include <tlhelp32.h>
 
-void killProc(std::string pProc)
+DWORD getProcID(std::string pProc)
 {
 	std::wstring wProc = std::wstring(pProc.begin(), pProc.end());
 	HANDLE hSnapShot = CreateToolhelp32Snapshot(TH32CS_SNAPALL, NULL);
+	DWORD pid = 0;
 	PROCESSENTRY32W pEntry{};
 	pEntry.dwSize = sizeof(pEntry);
 	BOOL hRes = Process32First(hSnapShot, &pEntry);
@@ -13,16 +14,25 @@ void killProc(std::string pProc)
 	{
 		if (std::wstring(pEntry.szExeFile) == wProc)
 		{
-			HANDLE hProcess = OpenProcess(PROCESS_TERMINATE, 0, pEntry.th32ProcessID);
-			if (hProcess)
-			{
-				TerminateProcess(hProcess, 9);
-				CloseHandle(hProcess);
-			}
+			pid = pEntry.th32ProcessID;
+			break;
 		}
 		hRes = Process32NextW(hSnapShot, &pEntry);
 	}
 	CloseHandle(hSnapShot);
+
+	return pid;
+}
+
+void killProc(std::string pProc)
+{
+	DWORD pid = getProcID(pProc);
+	HANDLE hProcess = OpenProcess(PROCESS_TERMINATE, 0, pid);
+	if (hProcess)
+	{
+		TerminateProcess(hProcess, 0);
+		CloseHandle(hProcess);
+	}
 }
 
 void killParentProc()

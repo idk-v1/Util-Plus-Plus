@@ -35,15 +35,18 @@ int main()
 			src.open("data/.autostart");
 			bool exists = false;
 			std::string data, binPath = getCurrentDir() + "\\bin\\RlWall.exe";
-			while (std::getline(src, data))
+			if (src.is_open())
 			{
-				if (binPath == data)
+				while (std::getline(src, data))
 				{
-					exists = true;
-					break;
+					if (binPath == data)
+					{
+						exists = true;
+						break;
+					}
 				}
+				src.close();
 			}
-			src.close();
 
 			// set wallpaper reloader to autostart if it doesn't already
 			if (!exists)
