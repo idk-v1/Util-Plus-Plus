@@ -627,6 +627,9 @@ namespace UIx1
 					style.rad   = num[3];
 					style.space = num[4];
 					font.loadFromFile(str[0]);
+
+					winSize->x *= style.scale;
+					winSize->y *= style.scale;
 					break;
 				}
 
