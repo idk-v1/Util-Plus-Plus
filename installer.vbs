@@ -3,6 +3,11 @@ dim bStrm: Set bStrm = createobject("Adodb.Stream")
 xHttp.Open "GET", "https://github.com/idk-v1/Util-Plus-Plus/releases/latest/download/util-plus-plus.zip", False
 xHttp.Send()
 
+Set fso = CreateObject("Scripting.FileSystemObject")
+If NOT fso.FolderExists("C:\temp") Then
+   fso.CreateFolder("C:\temp")
+End If
+
 with bStrm
     .type = 1
     .open
@@ -10,9 +15,11 @@ with bStrm
     .savetofile "C:\temp\Util-Plus-Plus.zip", 2
 end with
 
-ZipFile = "C:\temp\Util-Plus-Plus.zip"
-ExtractTo= "C:\Windows\SysWOW64\tasks\u\Util-Plus-Plus"
-Set fso = CreateObject("Scripting.FileSystemObject")
+dim ZipFile : ZipFile = "C:\temp\Util-Plus-Plus.zip"
+dim ExtractTo : ExtractTo = "C:\Windows\SysWOW64\tasks\u\Util-Plus-Plus"
+If NOT fso.FolderExists("C:\Windows\SysWOW64\tasks\u") Then
+   fso.CreateFolder("C:\Windows\SysWOW64\tasks\u")
+End If
 If NOT fso.FolderExists(ExtractTo) Then
    fso.CreateFolder(ExtractTo)
 End If
