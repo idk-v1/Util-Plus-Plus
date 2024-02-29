@@ -1,8 +1,10 @@
 #include "Utils/UIx1.h"
+#include "Utils/File.h"
 
 
 int main()
 {
+	setCurrentDir(getProgDir());
 	sf::Vector2u winSize;
 	UIx1::UI ui("res/.ui", &winSize);
 

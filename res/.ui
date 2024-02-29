@@ -44,7 +44,7 @@ S, 0, 0, 9, 5, "Customization", 30
 	T, 6, 1, 3, 2, " Show`Seconds", 15, "bin/ShowSec.exe"
 	B, 0, 3, 3, 2, "Remove Admin` Shortcuts", 15, "bin/RmAdmSh.exe"
 	B, 3, 3, 3, 2, "Remove Default` Taskbar Pins", 15, "bin/RmDefTaskbarPins.exe"
-	C, 7F007F, 7F007F, FFFFFF
+	C, 7F0000, 7F0000, FFFFFF
 	T, 6, 3, 3, 2, "Show Battery`  Percent", 15, "bin/ShBattery.exe"
 
 C, 2F373F, 1F272F, FFFFFF
