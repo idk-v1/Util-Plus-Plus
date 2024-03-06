@@ -3,33 +3,103 @@
 #include <SFML/Graphics.hpp>
 #include <Windows.h>
 
-#define TO_MICRO 1000000
-#define SIZE 64
+#define TO_MICRO_SEC 1000000
+#define SIZE 16
 
-sf::Image createImage()
+void drawNum(sf::Image& pImg, int pX, int pY, int pNum)
 {
-	sf::RenderTexture tex;
-	tex.create(SIZE, SIZE);
+	// Top
+	switch (pNum)
+		case 0:case 2:case 3:case 5:case 6:case 7:case 8:case 9:
+		for (int i = 0; i < 5; i++)
+			pImg.setPixel(pX + i, pY, sf::Color::White);
 
-	sf::RectangleShape rect(sf::Vector2f(SIZE, SIZE));
-	rect.setFillColor(sf::Color(rand() % 256, rand() % 256, rand() % 256, 255));
-	tex.draw(rect);
+	// Middle
+	switch (pNum)
+		case 2:case 3:case 4:case 5:case 6:case 8:case 9:
+			for (int i = 0; i < 5; i++)
+				pImg.setPixel(pX + i, pY + 4, sf::Color::White);
 
-	return tex.getTexture().copyToImage();
+	// Bottom
+	switch (pNum)
+		case 0:case 2:case 3:case 5:case 6:case 8:case 9:
+			for (int i = 0; i < 5; i++)
+				pImg.setPixel(pX + i, pY + 8, sf::Color::White);
+
+	// Top Right
+	switch (pNum)
+		case 0:case 1:case 2:case 3:case 4:case 7:case 8:case 9:
+			for (int i = 0; i < 5; i++)
+				pImg.setPixel(pX + 4, pY + i, sf::Color::White);
+
+	// Bottom Right
+	switch (pNum)
+		case 0:case 1:case 3:case 4:case 5:case 6:case 7:case 8:case 9:
+			for (int i = 0; i < 5; i++)
+				pImg.setPixel(pX + 4, pY + 4 + i, sf::Color::White);
+
+	// Top Left
+	switch (pNum)
+		case 0:case 4:case 5:case 6:case 8:case 9:
+			for (int i = 0; i < 5; i++)
+				pImg.setPixel(pX, pY + i, sf::Color::White);
+
+	// Bottom Left
+	switch (pNum)
+		case 0:case 2:case 6:case 8:
+			for (int i = 0; i < 5; i++)
+				pImg.setPixel(pX, pY + 4 + i, sf::Color::White);
 }
 
-void render(NOTIFYICONDATAA& pNotifIcon)
+void drawSaveIcon(sf::Image& pImg)
 {
-	sf::Image icon = createImage();
+	pImg.setPixel(2,10, sf::Color::Green);
+	pImg.setPixel(3,10, sf::Color::Green);
+	pImg.setPixel(2,11, sf::Color::Green);
+	pImg.setPixel(3,11, sf::Color::Green);
 
-	HBITMAP bitmap = CreateBitmap(SIZE, SIZE, 1, 32, icon.getPixelsPtr());
-	ICONINFO ii = { TRUE, 0, 0, bitmap, bitmap };
-	HICON hIcon = CreateIconIndirect(&ii);
+	pImg.setPixel(0, 12, sf::Color::Green);
+	pImg.setPixel(1, 12, sf::Color::Green);
+	pImg.setPixel(2, 12, sf::Color::Green);
+	pImg.setPixel(3, 12, sf::Color::Green);
+	pImg.setPixel(4, 12, sf::Color::Green);
+	pImg.setPixel(5, 12, sf::Color::Green);
+	pImg.setPixel(0, 13, sf::Color::Green);
+	pImg.setPixel(1, 13, sf::Color::Green);
+	pImg.setPixel(2, 13, sf::Color::Green);
+	pImg.setPixel(3, 13, sf::Color::Green);
+	pImg.setPixel(4, 13, sf::Color::Green);
+	pImg.setPixel(5, 13, sf::Color::Green);
 
-	pNotifIcon.hIcon = hIcon;
-	Shell_NotifyIconA(NIM_MODIFY, &pNotifIcon);
-	DestroyIcon(hIcon);
-	DeleteObject(bitmap);
+	pImg.setPixel(2, 14, sf::Color::Green);
+	pImg.setPixel(3, 14, sf::Color::Green);
+	pImg.setPixel(2, 15, sf::Color::Green);
+	pImg.setPixel(3, 15, sf::Color::Green);
+}
+
+void drawChargeIcon(sf::Image& pImg)
+{
+	pImg.setPixel(12, 10, sf::Color::Cyan);
+	pImg.setPixel(12, 11, sf::Color::Cyan);
+	pImg.setPixel(14, 10, sf::Color::Cyan);
+	pImg.setPixel(14, 11, sf::Color::Cyan);
+
+	pImg.setPixel(11, 12, sf::Color::Cyan);
+	pImg.setPixel(12, 12, sf::Color::Cyan);
+	pImg.setPixel(13, 12, sf::Color::Cyan);
+	pImg.setPixel(14, 12, sf::Color::Cyan);
+	pImg.setPixel(15, 12, sf::Color::Cyan);
+	pImg.setPixel(11, 13, sf::Color::Cyan);
+	pImg.setPixel(12, 13, sf::Color::Cyan);
+	pImg.setPixel(13, 13, sf::Color::Cyan);
+	pImg.setPixel(14, 13, sf::Color::Cyan);
+	pImg.setPixel(15, 13, sf::Color::Cyan);
+
+	pImg.setPixel(12, 14, sf::Color::Cyan);
+	pImg.setPixel(13, 14, sf::Color::Cyan);
+	pImg.setPixel(14, 14, sf::Color::Cyan);
+	pImg.setPixel(13, 15, sf::Color::Cyan);
+
 }
 
 int main()
@@ -39,7 +109,7 @@ int main()
 	win.setVisible(false);
 
 	sf::Clock clock;
-	int deltaTime = 0;
+	int deltaTime = 5 * TO_MICRO_SEC;
 
 	NOTIFYICONDATAA notifIcon{ 0 };
 	notifIcon.cbSize = sizeof(NOTIFYICONDATA);
@@ -49,7 +119,12 @@ int main()
 
 	Shell_NotifyIconA(NIM_ADD, &notifIcon);
 
-	render(notifIcon);
+	sf::Image img;
+	HBITMAP bitmap;
+	ICONINFO ii;
+	HICON hIcon;
+
+	Shell_NotifyIconA(NIM_MODIFY, &notifIcon);
 
 	while (win.isOpen())
 	{
@@ -59,14 +134,35 @@ int main()
 				win.close();
 		
 		deltaTime += clock.restart().asMicroseconds();
-		while (deltaTime >= 5 * TO_MICRO)
+		while (deltaTime >= 5 * TO_MICRO_SEC)
 		{
-			deltaTime -= 5 * TO_MICRO;
-			render(notifIcon);
+			deltaTime -= 5 * TO_MICRO_SEC;
+
+			SYSTEM_POWER_STATUS power;
+			GetSystemPowerStatus(&power);
+
+			img.create(SIZE, SIZE, sf::Color::Black);
+			if (power.BatteryLifePercent != 255)
+			{
+				drawNum(img, 1, 1, power.BatteryLifePercent > 99 ? 1 : -1);
+				drawNum(img, 3, 0, (power.BatteryLifePercent / 10) % 10);
+				drawNum(img, 10,0, power.BatteryLifePercent % 10);
+			}
+			if (power.SystemStatusFlag)
+				drawSaveIcon(img);
+			if (power.ACLineStatus)
+				drawChargeIcon(img);
+
+			bitmap = CreateBitmap(SIZE, SIZE, 1, 32, img.getPixelsPtr());
+			ii = { 1, 0, 0, bitmap, bitmap };
+			hIcon = CreateIconIndirect(&ii);
+			notifIcon.hIcon = hIcon;
+			Shell_NotifyIconA(NIM_MODIFY, &notifIcon);
+			DestroyIcon(hIcon);
+			DeleteObject(bitmap);
 		}
 	}
 
 	Shell_NotifyIconA(NIM_DELETE, &notifIcon);
-
 	return 0;
 }
