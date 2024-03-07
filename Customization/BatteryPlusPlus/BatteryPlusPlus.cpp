@@ -144,7 +144,7 @@ int main()
 			img.create(SIZE, SIZE, sf::Color::Black);
 			if (power.BatteryLifePercent != 255)
 			{
-				drawNum(img, 1, 1, power.BatteryLifePercent > 99 ? 1 : -1);
+				drawNum(img, 0, 0, power.BatteryLifePercent > 99 ? 1 : -1);
 				drawNum(img, 3, 0, (power.BatteryLifePercent / 10) % 10);
 				drawNum(img, 10,0, power.BatteryLifePercent % 10);
 			}
