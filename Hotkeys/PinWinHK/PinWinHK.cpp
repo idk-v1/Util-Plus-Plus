@@ -28,6 +28,8 @@ int main()
 		ctrlLast = ctrl;
 		winLast = win;
 		tLast = t;
+
+		Sleep(10);
 	}
 
 	return 0;

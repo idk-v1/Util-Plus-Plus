@@ -20,6 +20,8 @@ int main()
 		ctrlLast = ctrl;
 		shiftLast = shift;
 		escLast = esc;
+
+		Sleep(10);
 	}
 
 	return 0;

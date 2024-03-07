@@ -20,6 +20,8 @@ int main()
 		ctrlLast = ctrl;
 		winLast = win;
 		eLast = e;
+
+		Sleep(10);
 	}
 
 	return 0;

@@ -20,6 +20,8 @@ int main()
 		ctrlLast = ctrl;
 		altLast = alt;
 		tLast = t;
+
+		Sleep(10);
 	}
 
 	return 0;
