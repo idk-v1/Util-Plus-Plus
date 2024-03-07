@@ -141,6 +141,7 @@
     <ClCompile Include="AddStartup.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\Utils\Autostart.h" />
     <ClInclude Include="..\..\Utils\File.h" />
     <ClInclude Include="..\..\Utils\Process.h" />
   </ItemGroup>

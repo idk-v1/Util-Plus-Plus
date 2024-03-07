@@ -148,6 +148,7 @@
     <ClCompile Include="ChWall.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\Utils\Autostart.h" />
     <ClInclude Include="..\..\Utils\File.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

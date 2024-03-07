@@ -1,4 +1,5 @@
 #include "../../Utils/File.h"
+#include "../../Utils/Autostart.h"
 #include <fstream>
 
 int main()
@@ -31,30 +32,9 @@ int main()
 			// reload wallpaper
 			SystemParametersInfoW(SPI_SETDESKWALLPAPER, 0, NULL, SPIF_UPDATEINIFILE);
 
-			// check if autostart already has wallpaper reloader
-			src.open("data/.autostart");
-			bool exists = false;
-			std::string data, binPath = getCurrentDir() + "\\bin\\RlWall.exe";
-			if (src.is_open())
-			{
-				while (std::getline(src, data))
-				{
-					if (binPath == data)
-					{
-						exists = true;
-						break;
-					}
-				}
-				src.close();
-			}
-
 			// set wallpaper reloader to autostart if it doesn't already
-			if (!exists)
-			{
-				dst.open("data/.autostart", std::ios::app);
-				dst << binPath << '\n';
-				dst.close();
-			}
+			if (!autoStartExists(getCurrentDir() + "\\bin\\RlWall.exe"))
+				autoStartAdd(getCurrentDir() + "\\bin\\RlWall.exe");
 		}
 	}
 

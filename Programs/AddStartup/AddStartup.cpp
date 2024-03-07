@@ -1,5 +1,6 @@
 #include "../../Utils/File.h"
 #include "../../Utils/Process.h"
+#include "../../Utils/Autostart.h"
 #include <fstream>
 
 int main()
@@ -12,31 +13,9 @@ int main()
 	{
 		setCurrentDir(getProgDir() + "\\..\\");
 
-		mkDir("data");
-
-		// checks autostart for duplicate
-		bool exists = false;
-		std::string data;
-		listIn.open("data/.autostart");
-		if (listIn.is_open())
+		if (!autoStartExists(str))
 		{
-			while (std::getline(listIn, data))
-			{
-				if (str == data)
-				{
-					exists = true;
-					break;
-				}
-			}
-			listIn.close();
-		}
-
-		// new entry if it doesn't already exist
-		if (!exists)
-		{
-			listOut.open("data/.autostart", std::ios::app);
-			listOut << str << '\n';
-			listOut.close();
+			autoStartAdd(str);
 
 			// reload program list
 			killParentProc();
