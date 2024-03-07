@@ -26,5 +26,8 @@
     <ClInclude Include="..\..\Utils\Registry.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Utils\Autostart.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -3,13 +3,12 @@
 
 int main(int argc, char* argv[])
 {
+    bool state = RegGetDWORD("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced", "ShowSecondsInSystemClock");
     if (argc == 2)
     {
-        RegSetDWORD("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced", "ShowSecondsInSystemClock", argv[1][0] - '0');
-
+        RegSetDWORD("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced", "ShowSecondsInSystemClock", !state);
         killProc("explorer.exe");
         startProc("C:/Windows/explorer.exe");
     }
-
-    return 0;
+    return state;
 }

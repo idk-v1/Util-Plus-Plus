@@ -265,27 +265,14 @@ namespace UIx1
 			ExecInput(pPos, pSize, pStylePtr, 
 				pLabelStr, pFontPtr, pExec, pFontSize, pColor)
 		{
-
-			qExec = exec;
-			for (auto& c : qExec)
-				if (c == '\\')
-					c = '/';
-
-			size_t slash = qExec.find_last_of('/');
-			if (slash != std::string::npos)
-				qExec.insert(slash + 1, "Q_");
-			else
-				qExec.insert(0, "Q_");
-
-			state = startProc(qExec, INFINITE);
+			state = startProc(exec, INFINITE);
 			rect.setColor(state ? color.front : color.back);
 		}
 
 		void click()
 		{
 			changed = true;
-			state = !startProc(qExec, INFINITE);
-			startProc(exec, INFINITE, std::to_string(state));
+			state = !startProc(exec, INFINITE, "X");
 
 			rect.setColor(state ? color.front : color.back);
 		}
@@ -311,7 +298,6 @@ namespace UIx1
 			target.draw(text, states);
 		}
 
-		std::string qExec;
 		bool state = false;
 	};
 

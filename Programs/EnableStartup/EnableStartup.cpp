@@ -3,16 +3,17 @@
 
 int main(int argc, char* argv[])
 {
-    std::string autoStart;
+    setCurrentDir(getProgDir() + "\\..\\");
+    std::string str = RegGetStr("Environment", "UserInitMprLogonScript");
+    std::string path = getCurrentDir() + "\\bin\\StartupRunner.exe";
+
+    bool state = (str == path);
     if (argc == 2)
     {
-        setCurrentDir(getProgDir() + "\\..\\");
-
-        if (argv[1][0] - '0')
-            autoStart = getCurrentDir() + "\\bin\\StartupRunner.exe";
-
-        RegSetStr("Environment", "UserInitMprLogonScript", autoStart);
+        if (state)
+            RegSetStr("Environment", "UserInitMprLogonScript", "");
+        else
+            RegSetStr("Environment", "UserInitMprLogonScript", getCurrentDir() + "\\bin\\StartupRunner.exe");
     }
-
-    return 0;
+    return state;
 }

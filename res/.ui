@@ -24,8 +24,9 @@
 # Buttons run <exec> when clicked.
 
 # 'T' Toggle <pos x: int, pos y: int, width: int, height: int, label: str, font size: int, exec: str>
-# Toggles also need to have a "Q_"<exec> file that will be run on startup and click.
-# Toggles run <exec> when clicked, then "Q_"<exec>. "Q_"<exec> should return 1 or 0.
+# Toggles run <exec> when clicked and on startup.
+# Toggle <exec>s should return the last state of the condition.
+# Toggles should set the condition if any arguments are passed in.
 
 # 'X' Textbox <pos x: int, pos y: int, width: int, height: int, text: str, font size: int>
 # Just displays text, no interaction.

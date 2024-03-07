@@ -22,6 +22,7 @@
     <ClCompile Include="ShowSec.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\Utils\Autostart.h" />
     <ClInclude Include="..\..\Utils\Process.h" />
     <ClInclude Include="..\..\Utils\Registry.h" />
   </ItemGroup>
