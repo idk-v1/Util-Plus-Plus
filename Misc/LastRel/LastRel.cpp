@@ -8,7 +8,7 @@
 
 int main()
 {
-    setCurrentDir(getProgDir() + "\\..\\");
+    setCurrentDir(getProgDir());
 
     if (!URLDownloadToFileA(0,
         "https://github.com/idk-v1/Util-Plus-Plus/releases/latest/download/util-plus-plus.zip",
@@ -29,14 +29,15 @@ int main()
                 break;
 
             file = file_stat.m_filename;
-            if (file.find('\\') != std::string::npos)
-                mkDir(getCurrentDir() + "\\" + file.substr(0, file.find('\\')));
+            if (file.find('/') != std::string::npos)
+                mkDir(file.substr(0, file.find('/')));
             mz_zip_reader_extract_file_to_file(&zip, file_stat.m_filename,
                 std::string(getCurrentDir() + "\\" + file_stat.m_filename).data(), 0);
         }
         mz_zip_reader_end(&zip);
         remove("temp.zip");
 
+        startProc("../Util-Plus-Plus.exe");
         startProc("Util-Plus-Plus.exe");
     }
 

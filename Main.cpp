@@ -2,8 +2,8 @@
 #include "Utils/File.h"
 
 #define VERSION_MAJOR 1 // Compatibility
-#define VERSION_MINOR 6 // Feature
-#define VERSION_PATCH 1 // Bug Fix
+#define VERSION_MINOR 7 // Feature
+#define VERSION_PATCH 0 // Bug Fix
 //#define DEBUG 1			// Work in Progress
 
 int main()
