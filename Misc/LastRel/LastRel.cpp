@@ -8,7 +8,7 @@
 
 int main()
 {
-    setCurrentDir(getProgDir());
+    setCurrentDir(getProgDir() + "\\..\\");
 
     if (!URLDownloadToFileA(0,
         "https://github.com/idk-v1/Util-Plus-Plus/releases/latest/download/util-plus-plus.zip",
@@ -37,7 +37,6 @@ int main()
         mz_zip_reader_end(&zip);
         remove("temp.zip");
 
-        startProc("../Util-Plus-Plus.exe");
         startProc("Util-Plus-Plus.exe");
     }
 
